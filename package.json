@@ -1,0 +1,24 @@
+{
+  "name": "balbes_escalation_3047",
+  "version": "1.0.0",
+  "description": "Balbes project",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Undric1701/Balbes-Escalation-3047.git.git"
+  },
+  "keywords": [
+    "git",
+    "repository:",
+    "(https://github.com/Undric1701/Balbes-Escalation-3047.git)"
+  ],
+  "author": "AT7 & IK4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Undric1701/Balbes-Escalation-3047.git/issues"
+  },
+  "homepage": "https://github.com/Undric1701/Balbes-Escalation-3047.git#readme"
+}
