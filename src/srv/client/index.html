@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Map page</title>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        height: 100%;
+        font-family: 'Inter', sans-serif, sans-serif;
+        background-color: #ffffff;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      #map {
+        position: relative;
+        flex-grow: 1;
+        min-height: 500px;
+      }
+      .ocean-button {
+        position: absolute;
+        background-color: rgba(47, 102, 247, 0.8);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        padding: 8px 14px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        box-shadow: 0 4px 12px rgba(47, 102, 247, 0.47);
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        transition: background-color 0.3s ease;
+        z-index: 5;
+      }
+      .ocean-button:hover,
+      .ocean-button:focus {
+        background-color: #1d4ed8;
+        outline: none;
+        box-shadow: 0 6px 20px rgba(30, 77, 230, 0.8);
+      }
+
+      @media (max-width: 640px) {
+        .ocean-button {
+          font-size: 0.85rem;
+          padding: 6px 10px;
+          min-width: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button role="link" id="Go">Game</button>
+    <script>
+    let buttonGo = document.getElementById("Go");   
+    buttonGo.addEventListener("click", async () => {
+      window.location.replace(`${window.location.origin}/src/srv/client/game`);
+    });
+ </script>
+    <div id="map" role="region"></div>
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script>
+      const oceans = [
+        {
+          name: 'Pacific Ocean',
+          coordinates: [-140, 0],
+        },
+        {
+          name: 'Atlantic Ocean',
+          coordinates: [-40, 20],
+        },
+        {
+          name: 'Indian Ocean',
+          coordinates: [75, -20],
+        },
+        {
+          name: 'Arctic Ocean',
+          coordinates: [0, 80],
+        },
+        {
+          name: 'Southern Ocean',
+          coordinates: [0, -65],
+        },
+      ];
+      const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://demotiles.maplibre.org/style.json',
+        center: [0, 20],
+        zoom: 2,
+        minZoom: 1,
+        maxZoom: 9,
+      });
+      map.addControl(new maplibregl.NavigationControl({showCompass:true, showZoom:true}), 'top-right');
+      
+      function createOceanButtons() {
+        const mapContainer = document.getElementById('map');
+            oceans.forEach(ocean => {
+          const oceanButton = document.createElement('button');
+          oceanButton.className = 'ocean-button';
+          oceanButton.type = 'button';
+          oceanButton.textContent = ocean.name;
+          oceanButton.title = ocean.description;
+          oceanButton.setAttribute('aria-label', `Fly to ${ocean.name}`);
+          oceanButton.dataset.lng = ocean.coordinates[0];
+          oceanButton.dataset.lat = ocean.coordinates[1];
+          oceanButton.addEventListener('click', () => {
+            map.flyTo({
+              center: [ocean.coordinates[0], ocean.coordinates[1]],
+              zoom: 4,
+              speed: 1.8,
+              curve: 1.8,
+            });
+          });
+          mapContainer.appendChild(oceanButton);
+          ocean.buttonElement = oceanButton;
+        });
+      }
+      function positionButtons() {
+        oceans.forEach(ocean => {
+          const oceanButton = ocean.buttonElement;
+          if (!oceanButton) return;
+          const point = map.project(new maplibregl.LngLat(ocean.coordinates[0], ocean.coordinates[1]));
+          oceanButton.style.left = point.x + 'px';
+          oceanButton.style.top = point.y + 'px';
+        });
+      }
+      map.on('load', () => {
+        createOceanButtons();
+        positionButtons();
+      });
+      map.on('move', () => {
+        positionButtons();
+      });
+      map.on('zoom', () => {
+        positionButtons();
+      });
+      window.addEventListener('resize', () => {
+        positionButtons();
+      });
+    </script>   
+  </body>
+</html>
