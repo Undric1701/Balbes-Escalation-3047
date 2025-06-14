@@ -1,6 +1,7 @@
 /* AT7, 14.06.2025, timer module */
 
 function getTime() {
+    let date = new Date();
     let t =
         date.getMilliseconds() / 1000.0 +
         date.getSeconds() +
