@@ -44,7 +44,7 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.UnitMatrix);
+        this.prim.draw(mth.MatrRotate(window.animation.timer.time, mth.Vec3(0, 1, 1)));
     }
 }
 

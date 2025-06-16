@@ -7,17 +7,13 @@ export class _Vec4 {
         this.z = z;
         this.w = w;
     }
-    vec4ToList = () => {
+    toList = () => {
         return [this.x, this.y, this.z, this.w];
     }
-    vec4ToArray = () => {
+    toArray = () => {
         return new Float32Array[this.x, this.y, this.z, this.w];
     }
 }
-export function Vec4Set(x, y, z, W) {
-    return new Vec4(x, y, z, W);
-}
-
 export function Vec4(x, y, z, w) {
     return new _Vec4(x, y, z, w)
 }

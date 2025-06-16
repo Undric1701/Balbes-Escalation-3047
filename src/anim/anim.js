@@ -8,12 +8,13 @@ export class Animation {
   constructor(socket) {
     this.timer = new time.Timer();
     this.render = new rnd.Render();
-    rnd.renderInit(this.render);
+    //rnd.renderInit(this.render);
     this.input = new input.Input();
     this.socket = socket;
     this.units = [];
-
-    this.animAddUnit(new unit.Unit_Test);
+  }
+  async finishInit() {
+    await this.render.finishInit();
   }
   animResponse = () => {
     this.timer.response();

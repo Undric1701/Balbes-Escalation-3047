@@ -11,8 +11,8 @@ export function shd(...args) {
   return new Shader(...args);
 }
 
-export let shds = [];
-export let numOfShds = 0;
+export let shds;
+export let numOfShds;
 
 async function tryLoadShaderAsync(shaderName) {
   try {
@@ -64,9 +64,12 @@ export async function shdsLoad(fileNamePrefix) {
       }
     }
     if (j == -1) {
-      return shds[numOfShds++] = shd(fileNamePrefix, shaderProgram);
+      shds[numOfShds] = shd(fileNamePrefix, shaderProgram);
+      numOfShds++;
+      return shds[numOfShds - 1];
     } else {
-      return shds[j] = shd(fileNamePrefix, shaderProgram);
+      shds[j] = shd(fileNamePrefix, shaderProgram);
+      return shds[j];
     }
   });
 }
@@ -94,5 +97,7 @@ export function shaderApply(shaderNo) {
 export let defaultShaderNo = 0;
 
 export async function shadersInit() {
-  shds[defaultShaderNo] = await shdsLoad("Default");
+  shds = [];
+  numOfShds = 0;
+  await shdsLoad("default");
 }

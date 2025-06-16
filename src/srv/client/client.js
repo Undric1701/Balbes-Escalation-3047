@@ -1,7 +1,7 @@
 /* AT7, 14.06, client module */
 
 import * as Anim from "../../../src/anim/anim.js"
-import * as ShdSys from "../../../src/anim/rnd/res/shaders.js"
+import * as unit from "../../anim/units/unit.js"
 
 let socket;
 export async function openWebsocketCommunication() {
@@ -38,12 +38,15 @@ export async function openWebsocketCommunication() {
     });
 };
 
-export function startAnimation() {
+export async function startAnimation() {
     let Animation = new Anim.Animation(socket);
+
+    await Animation.finishInit();
     if (window.animation == undefined) {
         window.animation = Animation;
     }
-    /*
+    Animation.animAddUnit(new unit.Unit_Test);
+    /*                                        
     let canvas = document.getElementById("webgl-canvas");
     gl = canvas.getContext("webgl2");
 
@@ -57,8 +60,8 @@ export function startAnimation() {
     ShdSys.shdsLoad(gl, "default");  
     */
     socket.emit("messageToServer", "Started new animation");
-    socket.emit("Animation-Started", socket.id, Animation);
-    window.requestAnimationFrame(Animation.animRender);
+    //socket.emit("Animation-Started", socket.id, Animation);
+    window.requestAnimationFrame(Animation.animResponse);
 }
 
 /*

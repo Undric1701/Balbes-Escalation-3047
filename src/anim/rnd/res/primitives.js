@@ -59,7 +59,7 @@ export class Prim {
         gl.deleteBuffer(this.VBuf);
         gl.deleteBuffer(this.IBuf);
         /* Deactivete vertex array */
-        gl.bindVertexArray(0);
+        //gl.bindVertexArray(0);
         gl.deleteVertexArrays(this.VA);
     }
     draw(matrW) {
@@ -75,16 +75,18 @@ export class Prim {
                 matrW = this.matrW;
             }
 
+
+
             gl.bindVertexArray(this.VA);
 
             if (this.IBuf == 0) {
                 glDrawArrays(this.type, 0, this.numOfElements);
             } else {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IBuf);
-                gl.drawElements(gl_prim_type, this.numOfElements, gl.UNSIGNED_INT, 0);
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, 0);
+                gl.drawElements(this.type, this.numOfElements, gl.UNSIGNED_INT, 0);
+                //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, 0);
             }
-            glBindVertexArray(0);
+            //glBindVertexArray(0);
         } catch (err) {
             console.log(err)
         }

@@ -3,7 +3,6 @@ import * as shd from "./res/shaders.js"
 
 export class Render {
     constructor() {
-        /*
         let webgl_canvas = document.getElementById("webgl-canvas");
         this.gl = webgl_canvas.getContext("webgl2");
         this.gl.viewportWidth = webgl_canvas.width;
@@ -15,10 +14,15 @@ export class Render {
         if (window.gl == undefined) {
             window.gl = this.gl;
         }
-        shd.shadersInit();
-        */
+    }
+    async finishInit() {
+        await shd.shadersInit();
     }
     renderStart = () => {
+        let gl = window.gl;
+        gl.clearColor(0.30, 0.47, 0.8, 1.0);
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT);
         console.log("Render start");
     }
     renderEnd = () => {

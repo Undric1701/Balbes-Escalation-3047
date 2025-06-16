@@ -6,6 +6,8 @@ export * from "./mth_vec4.js"
 export * from "./mth_matr.js"
 export * from "./mth_cam.js"
 
+export let PI = 3.14159265358979323846;
+
 export class _Vertex {
     constructor(pos, texCoord, color, normal) {
         if (pos != undefined) {
@@ -37,7 +39,7 @@ export class _Vertex {
         return this.pos.toList().concat(this.texCoord.toList(), this.color.toList(), this.normal.toList());
     }
     toArray = () => {
-        return new Float32Array(this.toList);
+        return new Float32Array(this.toList());
     }
 }
 
@@ -54,5 +56,10 @@ export function VertexList(posList, texCoordList, colorsList, normalsList) {
 }
 
 export function VertexArray(vertArr) {
-    return new Float32Array(vertArr);
+    let vertMas = [];
+
+    for (let i = 0; i < vertArr.length; i++) {
+        vertMas = vertMas.concat(vertArr[i].toList());
+    }
+    return new Float32Array(vertMas);
 }

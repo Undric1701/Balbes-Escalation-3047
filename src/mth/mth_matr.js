@@ -1,5 +1,7 @@
 /* AT7, 13.06.2025, math module: matrices module */
 
+import { PI } from "./mth.js"
+
 export class Matr {
     constructor(A00, A01, A02, A03,
         A10, A11, A12, A13,

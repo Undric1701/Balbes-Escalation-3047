@@ -6,10 +6,10 @@ export class _Vec3 {
         this.y = y;
         this.z = z;
     }
-    ToList = () => {
+    toList = () => {
         return [this.x, this.y, this.z];
     }
-    ToArray = () => {
+    toArray = () => {
         return new Float32Array[this.x, this.y, this.z];
     }
 }
