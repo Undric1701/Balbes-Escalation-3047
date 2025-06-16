@@ -86,8 +86,8 @@ class _texture {
           if (is_first) {
             is_first = false;
             sideInfos.forEach((side) => {
-              const {target, fileName} = side;
-              gl.texImage2D(target, 0, gl.RGBA, img.width, img.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                const { target, fileName } = side;
+                gl.texImage2D(target, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 0]));
             });
             gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
           }
@@ -114,14 +114,23 @@ class _texture {
     gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
   } // End of 'apply' function
 
-  free = () => {
+    apply(shd, texUnit, name = null) {
+        let uniform_name = name ? name : "Texture" + texUnit;
+        if (shd == undefined || shd.id == undefined || shd.id == null || shd.uniforms[uniform_name] == undefined)
+            return;
+        gl.activeTexture(gl.TEXTURE0 + texUnit);
+        gl.bindTexture(this.type, this.id);
+        gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
+    } // End of 'apply' function
+
+    free = () => {
         if (--this.referenceCount <= 0) {
             window.global.deleteTexture(this.texID);
             console.log()
         }
     }
 } // End of '_texture' class
- 
+
 export function texture(...args) {
   if (args[0] instanceof _texture)
     return args[0];

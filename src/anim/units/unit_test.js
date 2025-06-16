@@ -31,7 +31,7 @@ export class Unit_Test {
             1, 3, 5,
             5, 7, 3];
         let normals = points;
-        let color = new Array(points.length).fill(mth.Vec4(1, 1, 1, 1));
+        let color = new Array(points.length).fill(mth.Vec4(0.9, 0.9, 0.9, 1));
         let texCoords = new Array(points.length).fill(mth.Vec2(0, 0));
         texCoords = [
             mth.Vec2(1, 0),

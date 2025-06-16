@@ -4,7 +4,7 @@ import * as res from "./res.js"
 
 export class Prim {
     constructor(mtl, type, vertArr, indArr) {
-        let i, gl = window.gl;
+        let i;
         this.type = type;
 
         //gl.GenVertexArrays(1, &Pr->VA);
@@ -53,18 +53,16 @@ export class Prim {
         this.mtl = mtl;
     }
     free = () => {
-        let gl = window.gl
         gl.bindVertexArray(this.VA);
         /* Disconnect buffer */
-        gl.bindBuffer(gl.ARRAY_BUFFER, 0);
+        //gl.bindBuffer(gl.ARRAY_BUFFER, 0);
         gl.deleteBuffer(this.VBuf);
         gl.deleteBuffer(this.IBuf);
         /* Deactivete vertex array */
         //gl.bindVertexArray(0);
-        gl.deleteVertexArrays(this.VA);
+        gl.deleteVertexArray(this.VA);
     }
     draw(matrW) {
-        let gl = window.gl;
         this.mtl.apply();
         try {
             if (this.type === undefined) {
@@ -79,21 +77,21 @@ export class Prim {
             }
 
             let w = mth.MatrMulMatr(this.matrW, matrW);
-            
+
             let winw = mth.MatrTranspose(mth.MatrInverse(w));
             let wvp = mth.MatrMulMatr(w, window.animation.cam.matrVP);
 
             let loc1 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrWVP");
             if (loc1 != null)
-            gl.uniformMatrix4fv(loc1, false, mth.float32ArrayFromMatr(wvp));
+                gl.uniformMatrix4fv(loc1, false, mth.float32ArrayFromMatr(wvp));
 
             let loc2 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrW");
             if (loc2 != null)
-            gl.uniformMatrix4fv(loc2, false, mth.float32ArrayFromMatr(w));
+                gl.uniformMatrix4fv(loc2, false, mth.float32ArrayFromMatr(w));
 
             let loc3 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrInv");
             if (loc3 != null)
-            gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(winw));
+                gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(winw));
 
 
             gl.bindVertexArray(this.VA);

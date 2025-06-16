@@ -40,18 +40,18 @@ export function MatrScale(S) {
 }
 export function MatrRotate(AngleInDegree, R) {
     let a = AngleInDegree * Math.PI,
-      sine = Math.sin(a),
-      cosine = Math.cos(a);
+        sine = Math.sin(a),
+        cosine = Math.cos(a);
     let x = 0,
-      y = 0,
-      z = 1;
+        y = 0,
+        z = 1;
     if (typeof R == "object")
-      if (R.length == 3) (x = R[0]), (y = R[1]), (z = R[2]);
-      else (x = R.x), (y = R.y), (z = R.z);
+        if (R.length == 3) (x = R[0]), (y = R[1]), (z = R[2]);
+        else (x = R.x), (y = R.y), (z = R.z);
 
     let len = x * x + y * y + z * z;
     if (len != 0 && len != 1)
-      (len = Math.sqrt(len)), (x /= len), (y /= len), (z /= len);
+        (len = Math.sqrt(len)), (x /= len), (y /= len), (z /= len);
     let m = new Matr();
     m.a[0][0] = cosine + x * x * (1 - cosine);
     m.a[0][1] = x * y * (1 - cosine) + z * sine;

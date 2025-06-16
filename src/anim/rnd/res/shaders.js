@@ -41,11 +41,11 @@ async function tryLoadShaderAsync(shaderName) {
 function loadShader(type, source) {
   const shader = window.gl.createShader(type);
 
-  window.gl.shaderSource(shader, source);
-  window.gl.compileShader(shader);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
 
-  if (!window.gl.getShaderParameter(shader, window.gl.COMPILE_STATUS)) {
-    let buf = window.gl.getShaderInfoLog(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    let buf = gl.getShaderInfoLog(shader);
     console.log(buf);
   }
   return shader;
@@ -56,20 +56,20 @@ let save_time = Date.now();
 export function shdApply(shd) {
   if (shd == NULL || shd == undefined)
     return false;
-  window.gl.useProgram(shd.progId);
+  gl.useProgram(shd.progId);
   return true;
 }
 
 export async function shdsLoad(fileNamePrefix) {
   console.log(`Shaders: ../../../../bin/shaders/${fileNamePrefix}/`);
   await Promise.all([tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/vert.glsl`), tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/frag.glsl`)]).then((results) => {
-    const vertexSh = loadShader(window.gl.VERTEX_SHADER, results[0]);
-    const fragmentSh = loadShader(window.gl.FRAGMENT_SHADER, results[1]);
+    const vertexSh = loadShader(gl.VERTEX_SHADER, results[0]);
+    const fragmentSh = loadShader(gl.FRAGMENT_SHADER, results[1]);
 
     const shaderProgram = gl.createProgram();
-    window.gl.attachShader(shaderProgram, vertexSh);
-    window.gl.attachShader(shaderProgram, fragmentSh);
-    window.gl.linkProgram(shaderProgram);
+    gl.attachShader(shaderProgram, vertexSh);
+    gl.attachShader(shaderProgram, fragmentSh);
+    gl.linkProgram(shaderProgram);
 
     let j = -1;
     for (let i = 0; i < numOfShds; i++) {
@@ -101,17 +101,20 @@ export function shdsUpdate() {
 
 export function shaderApply(shaderNo) {
   if (shaderNo != undefined) {
-    window.gl.useProgram(shds[shaderNo].progId);
+    gl.useProgram(shds[shaderNo].progId);
   } else {
     console.log("there is no shader to apply, applying default");
-    window.gl.useProgram(shds[defaultShaderNo].progId);
+    gl.useProgram(shds[defaultShaderNo].progId);
   }
 }
 
 export let defaultShaderNo = 0;
+export let matrWLocation,
+  matrVPLocation;
 
 export async function shadersInit() {
   shds = [];
   numOfShds = 0;
   await shdsLoad("default");
+  matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
 }
