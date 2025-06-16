@@ -45,7 +45,7 @@ export async function openWebsocketCommunication() {
 };
 
 export function startAnimation() {
-    Animation = new Anim.Animation();
+    Animation = new Anim.Animation(socket);
     socket.emit("messageToServer", "Started new animation");
     socket.emit("Animation-Started", socket.id, Animation);
     window.requestAnimationFrame(Animation.animRender);

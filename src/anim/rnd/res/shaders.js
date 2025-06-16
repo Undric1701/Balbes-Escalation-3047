@@ -1,12 +1,14 @@
+/* IK4, 16.06, shaders module */
+
 class Shader {
-    constructor(name, id) {
-        this.name = name;
-        this.id = id;
-    };
+  constructor(name, id) {
+    this.name = name;
+    this.id = id;
+  };
 }
 
 export function shd(...args) {
-    return new Shader(...args);
+  return new Shader(...args);
 }
 
 async function tryLoadShaderAsync(shaderName) {
@@ -35,21 +37,20 @@ function loadShader(gl, type, source) {
 let save_time = Date.now();
 
 export function shdsUpdate(gl) {
-    let t = Date.now();
+  let t = Date.now();
 
-    if (t - save_time >  1000)
-    {
-        Promise.all([tryLoadShaderAsync("../../../../bin/shaders/vert.glsl"), tryLoadShaderAsync("../../../../bin/shaders/frag.glsl")]).then((results) => {
-            const vertexSh = loadShader(gl, gl.VERTEX_SHADER, results[0]);
-            const fragmentSh = loadShader(gl, gl.FRAGMENT_SHADER, results[1]);
+  if (t - save_time > 1000) {
+    Promise.all([tryLoadShaderAsync("../../../../bin/shaders/vert.glsl"), tryLoadShaderAsync("../../../../bin/shaders/frag.glsl")]).then((results) => {
+      const vertexSh = loadShader(gl, gl.VERTEX_SHADER, results[0]);
+      const fragmentSh = loadShader(gl, gl.FRAGMENT_SHADER, results[1]);
 
-            const shaderProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexSh);
-            gl.attachShader(shaderProgram, fragmentSh);
-            gl.linkProgram(shaderProgram);
-        });
+      const shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexSh);
+      gl.attachShader(shaderProgram, fragmentSh);
+      gl.linkProgram(shaderProgram);
+    });
 
-        console.log("Updating shaders");
-        save_time = t;
-    }
+    console.log("Updating shaders");
+    save_time = t;
+  }
 }
