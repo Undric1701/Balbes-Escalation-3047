@@ -12,8 +12,6 @@ export function shd(...args) {
 }
 
 export let shds = [];
-shds[0] = shdsLoad("Default");
-export let defaultShaderNo = 0;
 export let numOfShds = 0;
 
 async function tryLoadShaderAsync(shaderName) {
@@ -51,8 +49,8 @@ export function shdApply(shd) {
 export async function shdsLoad(fileNamePrefix) {
   console.log(`Shaders: ../../../../bin/shaders/${fileNamePrefix}/`);
   await Promise.all([tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/vert.glsl`), tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/frag.glsl`)]).then((results) => {
-    const vertexSh = loadShader(window.gl, window.gl.VERTEX_SHADER, results[0]);
-    const fragmentSh = loadShader(window.gl, window.gl.FRAGMENT_SHADER, results[1]);
+    const vertexSh = loadShader(window.gl.VERTEX_SHADER, results[0]);
+    const fragmentSh = loadShader(window.gl.FRAGMENT_SHADER, results[1]);
 
     const shaderProgram = gl.createProgram();
     window.gl.attachShader(shaderProgram, vertexSh);
@@ -91,5 +89,10 @@ export function shaderApply(shaderNo) {
     console.log("there is no shader to apply, applying default");
     window.gl.useProgram(shds[defaultShaderNo].progId);
   }
+}
 
+export let defaultShaderNo = 0;
+
+export async function shadersInit() {
+  shds[defaultShaderNo] = await shdsLoad("Default");
 }

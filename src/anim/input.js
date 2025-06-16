@@ -5,6 +5,6 @@ export class Input {
         this.pressedButtons = [];
     }
     response = () => {
-        console.log("Input response");
+        //console.log("Input response");
     }
 }

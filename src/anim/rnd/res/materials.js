@@ -1,6 +1,6 @@
 /* AT7, 14.06.2025, materials module */
 
-import * as shd from "./shaders.js"
+import * as res from "./res.js"
 /*
 typedef struct tagtwrMATERIAL
 {
@@ -25,7 +25,7 @@ typedef struct tagtwrMATERIAL
 export class Material {
     constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
         try {
-            if (typeof name === String) {
+            if (typeof name == "string") {
                 this.name = name;
             } else {
                 throw new Error("Invalid name");
@@ -48,16 +48,16 @@ export class Material {
         }
     }
     apply = () => {
-        shd.shaderApply(this.shaderProgramNo);
+        res.shaderApply(this.shaderNo);
         for (let i = 0; i < this.texturesCount; i++) {
             if (this.textures[i] != undefined) {
                 window.gl.activeTexture(window.gl.TEXTURE0 + i);
                 window.gl.bindTexture(window.gl.TEXTURE_2D, this.textures[i].texID);
             }
         }
-        window.gl.uniform3f(window.gl.getUniformLocation(this.shaderId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
-        window.gl.uniform3f(window.gl.getUniformLocation(this.shaderId, "Kd"), this.kd[0], this.kd[1], this.kd[2]);
-        window.gl.uniform3f(window.gl.getUniformLocation(this.shaderId, "Ks"), this.ks[0], this.ks[1], this.ks[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Kd"), this.kd[0], this.kd[1], this.kd[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ks"), this.ks[0], this.ks[1], this.ks[2]);
     }
     bindTex = (no, texture) => {
         if (no >= 0 && no < this.texturesCount) {

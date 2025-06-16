@@ -1,13 +1,14 @@
 /* AT7, 16.06, unit test sample */
-import { Prim } from "../rnd/res/primitives.js"
+import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 
 export class Unit_Test {
-    init = () => {
+    constructor() {
 
-        this.mtl = new mtl.Material("Test material", Vec4(0.3, 0.3, 0.3, 1), Vec4(0.5, 0.5, 0.5, 1), Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, shd.defaultShader);
+        this.mtl = new res.Material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
 
-        let c = [mth.Vec3Normalize(mth.Vec3(-a, -a, -a)),
+        let a = 1;
+        let points = [mth.Vec3Normalize(mth.Vec3(-a, -a, -a)),
         mth.Vec3Normalize(mth.Vec3(a, -a, -a)),
         mth.Vec3Normalize(mth.Vec3(-a, -a, a)),
         mth.Vec3Normalize(mth.Vec3(a, -a, a)),
@@ -32,15 +33,15 @@ export class Unit_Test {
         let color = new Array(points.length).fill(mth.Vec4(0.5, 0.5, 0.5, 1));
         let texCoords = new Array(points.length).fill(mth.Vec2(0, 0));
 
-        let verticesc = mth.VertexList(points, texCoords, color, normals);
+        let vertices = mth.VertexList(points, texCoords, color, normals);
 
-        this.prim = new prim.Prim(mtl, window.gl.TRIANGLES, vertices, Indices);
+        this.prim = new res.Prim(this.mtl, window.gl.TRIANGLES, vertices, Indices);
     };
     close = () => {
         //this.prim.draw(mth.UnitMatrix);
     }
     response = () => {
-        console.log("Test unit response");
+        //console.log("Test unit response");
     };
     render = () => {
         this.prim.draw(mth.UnitMatrix);
@@ -48,6 +49,6 @@ export class Unit_Test {
 }
 
 export function unitCreate() {
-    return new Unit_Test;
+    return new Unit_Test();
 }
 

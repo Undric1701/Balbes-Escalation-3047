@@ -9,15 +9,15 @@ export class Prim {
         //gl.GenVertexArrays(1, &Pr->VA);
         this.VA = gl.createVertexArray();
         /* Vertex data */
-        if (V != NULL && NoofV != 0) {
+        if (vertArr != undefined) {
             this.VBuf = gl.createBuffer();
             //gl.bindBuffer(this.VBuf);
             gl.bindVertexArray(this.VA);
 
             /* Set vertex data to buffer  */
             gl.bindBuffer(gl.ARRAY_BUFFER, this.VBuf);
-            //glBufferData(GL_ARRAY_BUFFER, Mtl->MtlPat->VertexStride * NoofV, V, GL_STATIC_DRAW);
-            gl.bufferData(gl.ARRAY_BUFFER, 48 * vertArr, V, gl.STATIC_DRAW);
+            //glBufferData(GL_ARRAY_BUFFER, Mtl->MtlPat->VertexStride * NoofV, vertArr, GL_STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, mth.VertexArray(vertArr), gl.STATIC_DRAW);
 
             gl.enableVertexAttribArray(0);
             gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 48, 0);
@@ -27,18 +27,17 @@ export class Prim {
             gl.vertexAttribPointer(2, 4, gl.FLOAT, false, 48, 20);
             gl.enableVertexAttribArray(3);
             gl.vertexAttribPointer(3, 3, gl.FLOAT, false, 48, 36);
-            gl.bindVertexArray(0);
-            //Twr->PrimEvalBB(&Pr->MinBB, &Pr->MaxBB, V, NoofV, Mtl->MtlPat);
+            //gl.bindVertexArray(0);
+            //Twr->PrimEvalBB(&Pr->MinBB, &Pr->MaxBB, vertArr, NoofV, Mtl->MtlPat);
         }
         /* Index data */
         if (indArr !== undefined && indArr.length > 0) {
             this.numOfElements = indArr.length;
-            this.IBuf = gl.BufferCreate();
+            this.IBuf = gl.createBuffer();
             /* Enable buffer */
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IBuf);
             /* Put data into memeory (NumOfI - indicies count, Ind - index array) */
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indArr.length, new Int32Array(indArr), gl.STATIC_DRAW);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, 0);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int32Array(indArr), gl.STATIC_DRAW);
             //Pr->NumOfTriangles = Type == TWR_RND_PRIM_TRIMESH ? NoofI / 3 : Type == TWR_RND_PRIM_TRISTRIP ? NoofI / 2 - 1 : 0;
         }
         else {
@@ -51,7 +50,6 @@ export class Prim {
         }
 
         this.mtl = mtl;
-        return Pr;
     }
     free = () => {
         let gl = window.gl

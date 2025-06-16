@@ -8,9 +8,11 @@ export class Animation {
   constructor(socket) {
     this.timer = new time.Timer();
     this.render = new rnd.Render();
+    rnd.renderInit(this.render);
     this.input = new input.Input();
     this.socket = socket;
     this.units = [];
+
     this.animAddUnit(new unit.Unit_Test);
   }
   animResponse = () => {
@@ -23,11 +25,13 @@ export class Animation {
     this.animRender();
   }
   animRender = () => {
-    console.log(`Current time is ${this.timer.getTime()}`)
+    //console.log(`Current time is ${this.timer.getTime()}`)
 
+    this.render.renderStart();
     for (let unit of this.units) {
-      unit.response();
+      unit.render();
     }
+    this.render.renderEnd();
     window.requestAnimationFrame(this.animResponse);
   }
   animResize = (w, h) => {

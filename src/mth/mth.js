@@ -51,4 +51,8 @@ export function VertexList(posList, texCoordList, colorsList, normalsList) {
         vertexList[i] = Vertex(posList[i], texCoordList[i], colorsList[i], normalsList[i]);
     }
     return vertexList;
-}                    
+}
+
+export function VertexArray(vertArr) {
+    return new Float32Array(vertArr);
+}
