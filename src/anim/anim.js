@@ -12,9 +12,11 @@ export class Animation {
   animResponse = () => {
     this.timer.response();
     this.input.response();
+    this.animRender();
   }
   animRender = () => {
     console.log(`Current time is ${this.timer.getTime()}`)
+    window.requestAnimationFrame(this.animResponse);
   }
 }
 

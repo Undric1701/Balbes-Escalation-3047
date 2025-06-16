@@ -13,4 +13,10 @@ export class Render {
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     }
+    renderStart = () => {
+        console.log("Render start");
+    }
+    renderEnd = () => {
+        console.log("Render end");
+    }
 }
