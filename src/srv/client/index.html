@@ -58,6 +58,11 @@
         }
       }
     </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+        import {openWebsocketCommunication} from "./client.js"
+        window.addEventListener("load", () => { openWebsocketCommunication()});
+    </script>
   </head>
   <body>
     <button role="link" id="Go">Game</button>
@@ -87,7 +92,7 @@
           name: 'Arctic Ocean',
           coordinates: [0, 80],
         },
-        {
+        { 
           name: 'Southern Ocean',
           coordinates: [0, -65],
         },

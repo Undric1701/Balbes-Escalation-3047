@@ -176,3 +176,7 @@ export function MatrFrustum(l, r, b, t, n, f) {
         0, 0, - 2 * n * f / (f - n), 0);
     return m;
 }
+
+export function float32ArrayFromMatr(matr) {
+    return new Float32Array(matr.a[0].concat(matr.a[1].concat(matr.a[2].concat(matr.a[3]))), 0, 16);
+}

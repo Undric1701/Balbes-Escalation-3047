@@ -1,20 +1,29 @@
 /* AT7, 14.06.2025, animation module */
+import * as rnd from "./rnd/rnd.js";
+import * as time from "./timer.js";
+import * as input from "./input.js";
 
-export function animInit( anim )
-{
-  /*
-  memset(&AT7_Anim, 0, sizeof(at7ANIM));
-  AT7_Anim.hWnd = hWnd;
-  AT7_RndInit(hWnd);
-  AT7_TimerInit();
-  AT7_Anim.hDC = AT7_hRndDC;
-  AT7_Anim.Camera_Mode = AT7_RND_CAMERA_NORMAL;
-  AT7_AnimInputInit();
-  */
+export class Animation {
+  constructor() {
+    this.timer = new time.Timer();
+    this.render = new rnd.Render();
+    this.input = new input.Input();
+  }
+  animResponse = () => {
+    this.timer.response();
+    this.input.response();
+  }
+  animRender = () => {
+    console.log(`Current time is ${this.timer.getTime()}`)
+  }
+}
+
+
+export function animInit(anim) {
+
 } /* End of 'animInit' function */
 
-export function animClose( anim )
-{
+export function animClose(anim) {
   /*
   INT i;
 
@@ -28,8 +37,7 @@ export function animClose( anim )
   */
 } /* End of 'animClose' function */
 
-export function animResize( anim, w, w )
-{
+export function animResize(anim, w, h) {
   /*
   AT7_RndResize(W, H);
   AT7_Anim.W = W;
@@ -39,15 +47,13 @@ export function animResize( anim, w, w )
 } /* End of 'animResize' function */
 
 ///????????????? Ivanich, podumai nado ili net!!!
-export function animCopyFrame( anim )
-{
-   /*
-  AT7_RndCopyFrame();
-  */
+export function animCopyFrame(anim) {
+  /*
+ AT7_RndCopyFrame();
+ */
 } /* End of 'animCopyFrame' function */
 
-export function animRender( anim )
-{
+export function animRender(anim) {
   /*
   INT i;
 
@@ -68,8 +74,7 @@ export function animRender( anim )
   */
 } /* End of 'animRender' function */
 
-export function animAddUnit( anim , uni )
-{
+export function animAddUnit(anim, uni) {
   /*
   if (AT7_Anim.NumOfUnits < AT7_MAX_UNITS)
     AT7_Anim.Units[AT7_Anim.NumOfUnits++] = Uni, Uni->Init(Uni, &AT7_Anim);
@@ -77,8 +82,7 @@ export function animAddUnit( anim , uni )
 } /* End of 'animAddUnit' function */
 
 ///?????????
-export function animFlipFullScreen( anim )
-{
+export function animFlipFullScreen(anim) {
   /*
   static BOOL IsFullScreen = FALSE;
   static RECT SaveRC;              
@@ -118,8 +122,7 @@ export function animFlipFullScreen( anim )
 } /* End of 'animFlipFullScreen' function */
 
 ///???????
-export function animExit( anim )
-{
+export function animExit(anim) {
   /*
   DestroyWindow(AT7_Anim.hWnd);
   */
