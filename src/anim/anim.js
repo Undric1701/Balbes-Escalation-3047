@@ -2,6 +2,7 @@
 import * as rnd from "./rnd/rnd.js";
 import * as time from "./timer.js";
 import * as input from "./input.js";
+import * as unit from "./units/unit.js"
 
 export class Animation {
   constructor(socket) {
@@ -10,13 +11,14 @@ export class Animation {
     this.input = new input.Input();
     this.socket = socket;
     this.units = [];
+    this.animAddUnit(new unit.Unit_Test);
   }
   animResponse = () => {
     this.timer.response();
     this.input.response();
 
     for (let unit of this.units) {
-      unit.response(this);
+      unit.response();
     }
     this.animRender();
   }
@@ -24,7 +26,7 @@ export class Animation {
     console.log(`Current time is ${this.timer.getTime()}`)
 
     for (let unit of this.units) {
-      unit.response(this);
+      unit.response();
     }
     window.requestAnimationFrame(this.animResponse);
   }

@@ -1,13 +1,7 @@
 /* AT7, 14.06, client module */
 
 import * as Anim from "../../../src/anim/anim.js"
-
-export function logABC() {
-    console.log("ABC");
-}
-
-let timer_id;
-let Animation;
+import * as ShdSys from "../../../src/anim/rnd/res/shaders.js"
 
 let socket;
 export async function openWebsocketCommunication() {
@@ -45,7 +39,23 @@ export async function openWebsocketCommunication() {
 };
 
 export function startAnimation() {
-    Animation = new Anim.Animation(socket);
+    let Animation = new Anim.Animation(socket);
+    if (window.animation == undefined) {
+        window.animation = Animation;
+    }
+    /*
+    let canvas = document.getElementById("webgl-canvas");
+    gl = canvas.getContext("webgl2");
+
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
+
+    gl.clearColor(0.30, 0.47, 0.8, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    Animation = new Anim.Animation();
+    ShdSys.shdsLoad(gl, "default");  
+    */
     socket.emit("messageToServer", "Started new animation");
     socket.emit("Animation-Started", socket.id, Animation);
     window.requestAnimationFrame(Animation.animRender);

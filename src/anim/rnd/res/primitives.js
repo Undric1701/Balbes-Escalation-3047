@@ -1,9 +1,9 @@
 /* AT7, 14.06.2025, primitives module */
-const mth = require("../../../mth/mth.js");
+import * as mth from "../../../mth/mth.js";
 
 export class Prim {
-    constructor(gl, mtl, type, vertArr, indArr) {
-        let i;
+    constructor(mtl, type, vertArr, indArr) {
+        let i, gl = window.gl;
         this.type = type;
 
         //gl.GenVertexArrays(1, &Pr->VA);
@@ -14,7 +14,7 @@ export class Prim {
             //gl.bindBuffer(this.VBuf);
             gl.bindVertexArray(this.VA);
 
-            /* Setd vertex data to buffer  */
+            /* Set vertex data to buffer  */
             gl.bindBuffer(gl.ARRAY_BUFFER, this.VBuf);
             //glBufferData(GL_ARRAY_BUFFER, Mtl->MtlPat->VertexStride * NoofV, V, GL_STATIC_DRAW);
             gl.bufferData(gl.ARRAY_BUFFER, 48 * vertArr, V, gl.STATIC_DRAW);
@@ -54,6 +54,7 @@ export class Prim {
         return Pr;
     }
     free = () => {
+        let gl = window.gl
         gl.bindVertexArray(this.VA);
         /* Disconnect buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, 0);
@@ -63,7 +64,9 @@ export class Prim {
         gl.bindVertexArray(0);
         gl.deleteVertexArrays(this.VA);
     }
-    draw(gl, matrW) {
+    draw(matrW) {
+        let gl = window.gl;
+        this.mtl.apply();
         try {
             if (this.type === undefined) {
                 throw new Error("undefined type of primitive");

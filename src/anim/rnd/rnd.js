@@ -15,7 +15,7 @@ export class Render {
         this.w = 1000;
         this.h = 1000;
         if (window.gl == undefined) {
-            window.gl = this;
+            window.gl = this.gl;
         }
     }
     renderStart = () => {

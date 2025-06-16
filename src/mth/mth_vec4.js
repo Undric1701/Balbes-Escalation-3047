@@ -1,6 +1,6 @@
 /* AT7, 13.06.2025, math module: 4D vectors module */
 
-export class Vec4 {
+export class _Vec4 {
     constructor(x, y, z, w) {
         this.x = x;
         this.y = y;
@@ -16,4 +16,8 @@ export class Vec4 {
 }
 export function Vec4Set(x, y, z, W) {
     return new Vec4(x, y, z, W);
+}
+
+export function Vec4(x, y, z, w) {
+    return new _Vec4(x, y, z, w)
 }

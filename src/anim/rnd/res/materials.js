@@ -23,7 +23,7 @@ typedef struct tagtwrMATERIAL
 */
 
 export class Material {
-    constructor(name, ka, kd, ks, ph, trans, shaderProgramID, texCount) {
+    constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
         try {
             if (typeof name === String) {
                 this.name = name;
@@ -38,17 +38,17 @@ export class Material {
             this.trans = trans;
             this.texturesCount = texCount;
             this.referenceCount = 0;
-            if (shaderProgramID !== undefined) {
-                this.shaderId = shaderProgramID;
+            if (shaderProgramNo !== undefined) {
+                this.shaderNo = shaderProgramNo;
             } else {
-                this.shaderId = shd.defaultShaderId;
+                this.shaderNo = shd.defaultShaderNo;
             }
         } catch (err) {
             console.log(err);
         }
     }
     apply = () => {
-        shd.shaderApply(this.shaderId);
+        shd.shaderApply(this.shaderProgramNo);
         for (let i = 0; i < this.texturesCount; i++) {
             if (this.textures[i] != undefined) {
                 window.gl.activeTexture(window.gl.TEXTURE0 + i);

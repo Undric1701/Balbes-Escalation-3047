@@ -1,6 +1,6 @@
 /* AT7, 14.06.2025, math module: 2D vectors module */
 
-export class Vec2 {
+export class _Vec2 {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -13,29 +13,29 @@ export class Vec2 {
     }
 }
 
-export function Vec2Set(x, y) {
-    return new Vec2(x, y);
+export function Vec2(x, y) {
+    return new _Vec2(x, y);
 }
 export function Vec2AddVec2(v1, v2) {
-    return new Vec2(v1.x + v2.x, v1.y + v2.y);
+    return Vec2(v1.x + v2.x, v1.y + v2.y);
 }
 export function Vec2SubVec2(v1, v2) {
-    return new Vec3(v1.x - v2.x, v1.y - v2.y);
+    return Vec3(v1.x - v2.x, v1.y - v2.y);
 }
 export function Vec2MulVec2(v1, v2) {
-    return new Vec2(v1.x * v2.x, v1.y * v2.y);
+    return Vec2(v1.x * v2.x, v1.y * v2.y);
 }
 export function Vec2MulNum(v1, n) {
-    return new Vec3(v1.x * n, v1.y * n);
+    return Vec3(v1.x * n, v1.y * n);
 }
 export function Vec2DivNum(v, n) {
     if (n != 0)
-        return new Vec2(v.x / n, v.y / n);
+        return Vec2(v.x / n, v.y / n);
     else
         return v;
 }
 export function Vec2Neg(v) {
-    return new Vec3(-v.x, -v.y);
+    return Vec3(-v.x, -v.y);
 }
 export function Vec2DotVec2(v1, v2) {
     return v1.x * v2.x + v1.y * v2.y;
