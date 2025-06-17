@@ -30,7 +30,7 @@ export class Unit_Test {
             1, 3, 5,
             5, 7, 3];
         let normals = points;
-        let color = new Array(points.length).fill(mth.Vec4(0.5, 0.5, 0.5, 1));
+        let color = new Array(points.length).fill(mth.Vec4(1, 1, 1, 1));
         let texCoords = new Array(points.length).fill(mth.Vec2(0, 0));
 
         let vertices = mth.VertexList(points, texCoords, color, normals);
@@ -44,7 +44,7 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.MatrRotate(window.animation.timer.time, mth.Vec3(0, 1, 1)));
+        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
     }
 }
 
