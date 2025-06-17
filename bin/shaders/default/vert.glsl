@@ -1,20 +1,23 @@
 #version 300 es
-
 precision highp float;
-layout(location = 0) in vec3 in_pos;
-layout(location = 1) in vec4 in_color;
-layout(location = 2) in vec3 in_normal;        
-out vec4 draw_color;
 uniform mat4 matrWVP;
 uniform mat4 matrW;
 uniform mat4 matrInv;
-uniform vec3 camDir;
-uniform vec3 camLoc;
+
+layout (location = 0) in vec3 inPosition;
+layout (location = 2) in vec4 inColor;
+layout (location = 3) in vec3 inNormal;                
+
+out vec4 drawColor;
+out vec3 drawNormal;
+out vec3 drawWPos;
+
 
 void main() {
-    gl_Position = matrW * vec4(in_pos, 1);
-    vec3 v = normalize(mat3(matrInv) * in_pos - camLoc);
-    vec3 n = normalize(in_normal);
-    n = faceforward(n, v, n);
-    draw_color = vec4(in_color.rgb * max(0.47, dot(n, normalize(-camDir))), 1);
+    gl_Position = matrWVP * vec4(inPosition, 1);
+    drawColor = inColor;
+    drawNormal = mat3(matrInv) * inNormal;
+    drawWPos = (matrW * vec4(inPosition, 1)).xyz; 
+    //drawColor = vec4(normalize(drawWPos), 1);
+    //gl_Position = vec4(a_pos, 1);
 }

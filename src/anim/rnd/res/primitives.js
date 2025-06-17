@@ -69,12 +69,30 @@ export class Prim {
                 throw new Error("undefined type of primitive");
             }
             if (matrW === undefined && this.matrW === undefined) {
-                matrW = mth.unitMatrix;
+                matrW = mth.UnitMatrix;
             } else if (matrW === undefined) {
                 matrW = this.matrW;
+            } else if (this.matrW === undefined) {
+                this.matrW = mth.UnitMatrix;
             }
 
-            gl.uniformMatrix4fv(res.matrWLocation, false, mth.float32ArrayFromMatr(matrW), 0, 16);
+            let w = mth.MatrMulMatr(this.matrW, matrW);
+
+            let winw = mth.MatrTranspose(mth.MatrInverse(w));
+            let wvp = mth.MatrMulMatr(w, window.animation.cam.matrVP);
+
+            let loc1 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrWVP");
+            if (loc1 != null)
+                gl.uniformMatrix4fv(loc1, false, mth.float32ArrayFromMatr(wvp));
+
+            let loc2 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrW");
+            if (loc2 != null)
+                gl.uniformMatrix4fv(loc2, false, mth.float32ArrayFromMatr(w));
+
+            let loc3 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrInv");
+            if (loc3 != null)
+                gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(winw));
+
 
             gl.bindVertexArray(this.VA);
 

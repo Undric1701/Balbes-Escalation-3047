@@ -63,6 +63,8 @@ export class Material {
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Kd"), this.kd[0], this.kd[1], this.kd[2]);
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ks"), this.ks[0], this.ks[1], this.ks[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "camLoc"), window.animation.cam.loc.toArray()[0], window.animation.cam.loc.toArray()[1], window.animation.cam.loc.toArray()[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "camDir"), window.animation.cam.dir.toArray()[0], window.animation.cam.dir.toArray()[1], window.animation.cam.dir.toArray()[2]);
     }
     bindTex = (no, texture) => {
         if (no >= 0 && no < this.texturesCount) {

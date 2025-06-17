@@ -1,8 +1,9 @@
 /* AT7, 14.06.2025, animation module */
 import * as rnd from "./rnd/rnd.js";
+import {camera} from "../mth/mth_cam.js";
 import * as time from "./timer.js";
 import * as input from "./input.js";
-import * as unit from "./units/unit.js"
+import * as unit from "./units/unit.js";
 
 export class Animation {
   constructor(socket) {
@@ -11,6 +12,7 @@ export class Animation {
     //rnd.renderInit(this.render);
     this.input = new input.Input();
     this.socket = socket;
+    this.cam = camera();
     this.units = [];
   }
   async finishInit() {
