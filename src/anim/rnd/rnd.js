@@ -1,5 +1,6 @@
 /* 14.06.2025, render module */
 import * as shd from "./res/shaders.js"
+import * as tex from "./res/textures.js"
 
 export class Render {
     constructor() {
@@ -17,6 +18,7 @@ export class Render {
     }
     async finishInit() {
         await shd.shadersInit();
+        //let t = tex.createTexture("A", 10, 10, true, gl.RGBA, ["AAAAAAAAAAAAAaaa", "AAAAAAAAAAAAa"]);
     }
     renderStart = () => {
         let gl = window.gl;

@@ -6,6 +6,7 @@ export class Unit_Test {
     constructor() {
 
         this.mtl = new res.Material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
+        this.mtl.bindTex(0, res.texture("./TWR_SHOT04.png", "2d"));
 
         let a = 1;
         let points = [mth.Vec3Normalize(mth.Vec3(-a, -a, -a)),
@@ -32,6 +33,16 @@ export class Unit_Test {
         let normals = points;
         let color = new Array(points.length).fill(mth.Vec4(1, 1, 1, 1));
         let texCoords = new Array(points.length).fill(mth.Vec2(0, 0));
+        texCoords = [
+            mth.Vec2(1, 0),
+            mth.Vec2(0, 1),
+            mth.Vec2(0, 0),
+            mth.Vec2(1, 1),
+            mth.Vec2(-1, 1),
+            mth.Vec2(1, -1),
+            mth.Vec2(0, -1),
+            mth.Vec2(-1, 0),
+        ];
 
         let vertices = mth.VertexList(points, texCoords, color, normals);
 
@@ -44,7 +55,7 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
+        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 800, 800)), mth.MatrScale(mth.Vec3(2, 2, 2))));
     }
 }
 
