@@ -5,6 +5,20 @@ class Shader {
     this.progId = prog;
     this.name = name;
   };
+
+  updateData() {
+    this.uniforms = {};
+    let countUnif = gl.getProgramParameter(this.progId, gl.ACTIVE_UNIFORMS);
+    for (let i = 0; i < countUnif; i++) {
+      const info = gl.getActiveUniform(this.progId, i);
+      this.uniforms[info.name] = {
+        name: info.name,
+        type: info.type,
+        size: info.size,
+        loc: gl.getUniformLocation(this.progId, info.name)
+      };
+    }
+  }
 }
 
 export function shd(...args) {

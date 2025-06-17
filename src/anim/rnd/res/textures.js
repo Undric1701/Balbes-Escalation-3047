@@ -1,10 +1,9 @@
 class _texture {
     // possible types: 2d, cube, target
     constructor(nameURL, textureType = "2d") {
-        let msgNo = 0;
         if (typeof nameURL == "object") {
             this.name = nameURL.name;
-            msgNo = vg.log("Texture loading: " + this.name);
+            console.log(`Texture loading: ${this.name}`);
             this.type = gl.TEXTURE_2D;
             this.id = gl.createTexture();
             gl.bindTexture(this.type, this.id);
@@ -19,7 +18,6 @@ class _texture {
                     gl.texParameteri(this.type, gl.TEXTURE_WRAP_T, gl.REPEAT);
                     gl.texParameteri(this.type, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
                     gl.texParameteri(this.type, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    vg.logAdd(" done [from image]", msgNo);
                 }
             } else {
                 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -29,12 +27,11 @@ class _texture {
                 gl.texParameteri(this.type, gl.TEXTURE_WRAP_T, gl.REPEAT);
                 gl.texParameteri(this.type, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
                 gl.texParameteri(this.type, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                vg.logAdd(" done [from buffer]", msgNo);
             }
             return;
         }
         this.name = nameURL;
-        msgNo = vg.log("Texture loading: " + this.name);
+        console.log(`Texture loading: ${this.name}`);
         this.id = gl.createTexture();
         this.textureType = textureType;
         if (textureType == "2d") {
@@ -43,6 +40,7 @@ class _texture {
             gl.texImage2D(this.type, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 0]));
             // Load image
             const img = new Image();
+            img.crossOrigin = "use-credentials";
             img.src = nameURL;
             img.onload = () => {
                 gl.bindTexture(this.type, this.id);
@@ -56,7 +54,6 @@ class _texture {
                 gl.texParameteri(this.type, gl.TEXTURE_WRAP_T, gl.REPEAT);
                 gl.texParameteri(this.type, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
                 gl.texParameteri(this.type, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                vg.logAdd(" done [from file]", msgNo);
             }
         } else if (textureType == "cube") {
             this.type = gl.TEXTURE_CUBE_MAP;
@@ -82,6 +79,7 @@ class _texture {
                 const { target, fileName } = side;
                 gl.bindTexture(this.type, this.id);
                 const img = new Image();
+                img.crossOrigin = "use-credentials";
                 img.src = this.name + fileName;
                 img.onload = () => {
                     gl.bindTexture(this.type, this.id);
@@ -89,14 +87,13 @@ class _texture {
                         is_first = false;
                         sideInfos.forEach((side) => {
                             const { target, fileName } = side;
-                            gl.texImage2D(target, 0, gl.RGBA, img.width, img.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                            gl.texImage2D(target, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 0]));
                         });
                         gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
                     }
                     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
                     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-                    vg.logAdd(` ${side.fileName}`, msgNo);
                 };
             });
             gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
@@ -117,13 +114,21 @@ class _texture {
         gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
     } // End of 'apply' function
 
+    apply(shd, texUnit, name = null) {
+        let uniform_name = name ? name : "Texture" + texUnit;
+        if (shd == undefined || shd.id == undefined || shd.id == null || shd.uniforms[uniform_name] == undefined)
+            return;
+        gl.activeTexture(gl.TEXTURE0 + texUnit);
+        gl.bindTexture(this.type, this.id);
+        gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
+    } // End of 'apply' function
+
     free = () => {
         if (--this.referenceCount <= 0) {
             window.global.deleteTexture(this.texID);
             console.log()
         }
     }
-
 } // End of '_texture' class
 
 export function texture(...args) {
@@ -136,6 +141,109 @@ export function texture(...args) {
     return new _texture(...args);
 } // End of 'texture' function
 
-export function texCreateFromVec4(v) {
-    return texture();
+export function createTexture(textureName, width, height, isMipmap, glType, pixelsBits) {
+    console.log(`Create texture: ${textureName} ${width} x ${height}`);
+
+    let type = gl.UNSIGNED_BYTE;
+    let comps = 1;
+    let isTransparent = false;
+
+    switch (glType) {
+        case gl.R8:
+            type = gl.UNSIGNED_BYTE;
+            comps = 1;
+            break;
+        case gl.R32F:
+            type = gl.FLOAT;
+            comps = 1;
+            break;
+        case gl.RGB8:
+        case gl.RGB8:
+            type = gl.UNSIGNED_BYTE;
+            comps = 3;
+            break;
+        case gl.RGB32F:
+            type = gl.FLOAT;
+            comps = 3;
+            break;
+        case gl.RGBA8:
+            type = gl.UNSIGNED_BYTE;
+            comps = 4;
+            if (pixelsBits) {
+                for (let i = 3; i < pixelsBits.length; i += 4) {
+                    if (pixelsBits[i] !== 255) {
+                        isTransparent = true;
+                        break;
+                    }
+                }
+            }
+            break;
+        case gl.RGBA32F:
+            type = gl.FLOAT;
+            comps = 4;
+            break;
+    }
+
+    const tex = gl.createTexture();
+    if (!tex) {
+        console.error('Failed to create WebGL texture');
+        return null;
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+
+    let mips = 1;
+    if (isMipmap) {
+        mips = Math.floor(Math.log2(Math.max(width, height))) + 1;
+        mips = Math.max(mips, 1);
+    }
+
+    try {
+        gl.texStorage2D(gl.TEXTURE_2D, mips, glType, width, height);
+    } catch (e) {
+        console.error('texStorage2D failed:', e);
+        gl.deleteTexture(tex);
+        return null;
+    }
+
+    let format;
+    if (comps === 4) {
+        format = gl.RGBA;
+    } else if (comps === 3) {
+        format = gl.RGB;
+    } else if (comps === 1) {
+        format = gl.RED;
+    } else {
+        format = gl.RGBA;
+    }
+
+    if (pixelsBits) {
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, pixelsBits);
+    }
+
+    if (isMipmap) {
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    } else {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    let t = texture();
+    t.id = tex;
+    t.name = textureName;
+    t.type = gl.TEXTURE_2D;
+    t.textureType = "2d";
+    /*
+    t.isMipmap = isMipmap;
+    t.isTransparent = isTransparent;
+    */
+
+    return t;
 }

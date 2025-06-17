@@ -36,8 +36,7 @@ export class _material {
         res.shaderApply(this.shaderNo);
         for (let i = 0; i < this.texturesCount; i++) {
             if (this.textures[i] != undefined) {
-                window.gl.activeTexture(window.gl.TEXTURE0 + i);
-                window.gl.bindTexture(window.gl.TEXTURE_2D, this.textures[i].texID);
+                this.textures[i].apply(res.shds[this.shaderNo], i);
             }
         }
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
