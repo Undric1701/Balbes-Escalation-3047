@@ -1,6 +1,6 @@
 /* AT7, 14.06.2025, animation module */
 import * as rnd from "./rnd/rnd.js";
-import {camera} from "../mth/mth_cam.js";
+import { camera } from "../mth/mth_cam.js";
 import * as time from "./timer.js";
 import * as input from "./input.js";
 import * as unit from "./units/unit.js";
@@ -40,8 +40,9 @@ export class Animation {
   animResize = (w, h) => {
     this.render.renderResize(w, h);
   }
-  animAddUnit = (unit) => {
+  async animAddUnit(unit) {
     this.units.push(unit);
+    await unit.init()
   }
 }
 

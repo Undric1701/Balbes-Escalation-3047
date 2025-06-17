@@ -5,7 +5,9 @@ import *  as mth from "../../mth/mth.js"
 export class Unit_Test {
     constructor() {
 
-        this.mtl = new res.Material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
+    };
+    async init() {
+        this.mtl = res.material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
 
         let a = 1;
         let points = [mth.Vec3Normalize(mth.Vec3(-a, -a, -a)),
@@ -35,8 +37,9 @@ export class Unit_Test {
 
         let vertices = mth.VertexList(points, texCoords, color, normals);
 
-        this.prim = new res.Prim(this.mtl, window.gl.TRIANGLES, vertices, Indices);
-    };
+        this.prim = res.prim(this.mtl, window.gl.TRIANGLES, vertices, Indices);
+        this.model = await res.loadG3DM("../../../../bin/models/warshipal.g3dm");
+    }
     close = () => {
         //this.prim.draw(mth.UnitMatrix);
     }
@@ -44,7 +47,8 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
+        //this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
+        this.model.draw(mth.MatrScale(mth.Vec3(0.1, 0.1, 0.1)));
     }
 }
 

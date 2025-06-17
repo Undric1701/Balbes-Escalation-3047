@@ -2,8 +2,8 @@
 import * as mth from "../../../mth/mth.js";
 import * as res from "./res.js"
 
-export class Prim {
-    constructor(mtl, type, vertArr, indArr) {
+export class _prim {
+    constructor(mtl = res.defaultMaterial, type, vertArr, indArr) {
         let i;
         this.type = type;
 
@@ -108,4 +108,8 @@ export class Prim {
             console.log(err)
         }
     }
+}
+
+export function prim(mtl, type, vertArr, indArr) {
+    return new _prim(mtl, type, vertArr, indArr);
 }

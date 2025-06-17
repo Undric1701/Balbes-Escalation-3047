@@ -1,5 +1,5 @@
 /* 14.06.2025, render module */
-import * as shd from "./res/shaders.js"
+import * as res from "./res/res.js"
 
 export class Render {
     constructor() {
@@ -16,7 +16,8 @@ export class Render {
         }
     }
     async finishInit() {
-        await shd.shadersInit();
+        await res.shadersInit();
+        await res.materialsInit();
     }
     renderStart = () => {
         let gl = window.gl;
@@ -45,5 +46,5 @@ export async function renderInit(render) {
     if (window.gl == undefined) {
         window.gl = render.gl;
     }
-    await shd.shadersInit();
+    await res.shadersInit();
 }

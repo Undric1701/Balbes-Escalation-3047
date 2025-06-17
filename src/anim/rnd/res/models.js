@@ -2,31 +2,52 @@
 import * as mth from "../../../mth/mth.js"
 import * as res from "./res.js"
 
-export class Model {
+class _model {
     constructor() {
         this.numOfPrims = 0;
-        this.maxNumOfPrims = 0;
         this.prims = [];
         this.minBB = mth.Vec3(0, 0, 0);
         this.maxBB = mth.Vec3(0, 0, 0);
         this.trans = mth.UnitMatrix;
     };
+    primAdd = (pr, trans) => {
+        if (trans == undefined) {
+            trans = mth.UnitMatrix;
+        }
+        this.prims[this.numOfPrims++] = { prim: pr, trans: trans };
+        this.evalBB();
+    }
+    evalBB = () => {
+        ///...
+    }
+    draw = (matrW) => {
+        if (matrW == undefined) {
+            matrW = mth.UnitMatrix;
+        }
+        let m = mth.MatrMulMatr(this.trans, matrW);
+
+        /* Draw all primitives */
+        for (let i = 0; i < this.numOfPrims; i++)
+            this.prims[i].prim.draw(mth.MatrMulMatr(this.prims[i].trans, m));
+    }
 }
 
-function modelCreate() {
-    let mdl = new Model();
-
-    mdl.maxNumOfPrims = 300;
-    mdl.trans = mth.UnitMatrix;
-
+export function model() {
+    let mdl = new _model();
     return mdl;
 }
 
-export async function loadG3DM(filename) {
+export async function loadG3DM(filename, loadMatr) {
     let response = await fetch(filename);
     let dataBuffer = await response.arrayBuffer();
     let buffer = new Uint8Array(dataBuffer);
     let curpos = 0;
+
+    if (loadMatr == undefined) {
+        loadMatr = mth.UnitMatrix;
+    }
+    let loadMatrInv = mth.MatrInverse(loadMatr);
+
 
     const sign = buffer.slice(curpos, curpos += 4).reduce((res_str, ch) => res_str += String.fromCharCode(ch), "");
     if (sign != "G3DM") {
@@ -41,7 +62,7 @@ export async function loadG3DM(filename) {
     let texs = resTable.slice(0, numOfTextures);
     let mtls = resTable.slice(numOfTextures, numOfTextures + numOfMaterials);
 
-    let mdl = new Model();
+    let mdl = model();
     mdl.prims = new Array(numOfPrims);
 
     let prim_pos = curpos;
@@ -55,7 +76,7 @@ export async function loadG3DM(filename) {
 
     curpos += numOfMaterials * (300 + (9 + 1 + 1 + 8 * 2) * 4 + 300 + 8);
 
-    for (t = 0; t < numOfTextures; t++) {
+    for (let t = 0; t < numOfTextures; t++) {
         let name;
         let w, h, c;
         let GLType;
@@ -69,16 +90,15 @@ export async function loadG3DM(filename) {
         } else if (c == 3) {
             GLType = gl.RGB8;
         } else {
-            GLType = GL_RGBA8;
+            GLType = gl.RGBA8;
         }
         let texData = dataBuffer.slice(curpos, curpos += c * w * h);
-        texs[t] = new res.Texture(Buf, w, h, true, GLType, ptr);
+        texs[t] = res.texture(w, h, true, GLType, texData);
     }
 
-    curpos = mtl_ptr;
-    for (m = 0; m < numOfMaterials; m++) {
-        let fmat;
-
+    curpos = mtl_pos;
+    for (let m = 0; m < numOfMaterials; m++) {
+        //let fmat = dataBuffer.slice(curpos, curpos += 300 + (9 + 1 + 1 + 8 * 2) * 4 + 300 + 8);
         let fmat_name = dataBuffer.slice(curpos, curpos += 300).reduce((res_str, ch) => res_str += ch == 0 ? "" : String.fromCharCode(ch), "");
         let s = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 11));
         let txtarr = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 8));
@@ -97,43 +117,43 @@ export async function loadG3DM(filename) {
 
         mtls[m] = new res.Material(fmat_name);
 
+        mtls[m].bindTex(0, res.texCreateFromVec4(mth.Vec4(mtl.ka.toList(), 0)));
 
-        fmat = dataBuffer.slice(curpos, curpos += 4);
-        /*
-        ptr += sizeof(* fmat);
-
-        trans_flag = fmat -> Trans == 1 ? TWR_MTL_OPAQUE : TWR_MTL_TRANSPARENT;
-        
-        if (fmat -> Tex[0] != -1 && MtlPat -> NumOfTextures > 1 && Texs[fmat -> Tex[0]] -> IsTransparent)
-            trans_flag = TWR_MTL_TRANSPARENT;
-
-        Mtls[m] = Twr -> MtlCreate(fmat -> Name, MtlPat, trans_flag);
-        sprintf(Buf, "%s.g3dm %s Ka texture", FName, fmat -> Name);
-        Twr -> MtlBindTex(Mtls[m], 0, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Ka, 0)));
-        Mtls[m] -> Trans = fmat -> Trans;
-        if (fmat -> Tex[0] == -1 && Mtls[m] -> NumOfTextures > 1) {
-            sprintf(Buf, "%s.g3dm %s Kd texture", FName, fmat -> Name);
-            Twr -> MtlBindTex(Mtls[m], 1, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Kd, 0)));
+        //Mtls[m] = Twr -> MtlCreate(fmat -> Name, MtlPat, trans_flag);
+        //sprintf(Buf, "%s.g3dm %s Ka texture", FName, fmat -> Name);
+        //Twr -> MtlBindTex(Mtls[m], 0, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Ka, 0)));
+        //Mtls[m] -> Trans = fmat -> Trans;
+        if (mtl.txs[0] == -1) {
+            mtls[m].bindTex(1, res.texCreateFromVec4(mth.Vec4(fmat.kd.toList(), 0)));
+        } else {
+            mtls[m].bindTex(1, texs[fmat.txs[0]]);
         }
-        else if (Mtls[m] -> NumOfTextures > 1)
-            Twr -> MtlBindTex(Mtls[m], 1, Texs[fmat -> Tex[0]]);
-        if (fmat -> Tex[1] == -1 && Mtls[m] -> NumOfTextures > 3)
-            Twr -> MtlBindTex(Mtls[m], 3, TWR_DefNMTex);
-        else if (Mtls[m] -> NumOfTextures > 3)
-            Twr -> MtlBindTex(Mtls[m], 3, Texs[fmat -> Tex[1]]);
-        if (fmat -> Tex[2] == -1 && Mtls[m] -> NumOfTextures > 2) {
-            sprintf(Buf, "%s.g3dm %s KsPh texture", FName, fmat -> Name);
-            Twr -> MtlBindTex(Mtls[m], 2, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Ks, fmat -> Ph)));
+        if (mtl.txs[1] == -1) {
+            mtls[m].bindTex(3, res.texCreateFromVec4(mth.Vec4(0.2, 0.2, 0.2, 0)));
+        } else {
+            mtls[m].bindTex(3, texs[fmat.txs[1]]);
         }
-        else if (Mtls[m] -> NumOfTextures > 2)
-            Twr -> MtlBindTex(Mtls[m], 2, Texs[fmat -> Tex[2]]);
-        */
+        if (mtl.txs[2] == -1) {
+            mtls[m].bindTex(2, res.texCreateFromVec4(mth.Vec4(fmat.ks.toList(), fmat.ph)));
+        } else {
+            mtls[m].bindTex(2, texs[fmat.txs[2]]);
+        }
     }
-
-
+    curpos = prim_pos;
     for (let i = 0; i < numOfPrims; i++) {
         let [numOfVertices, numOfFacetIndices, mtlNo] = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * 3));
         let v = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 12 * numOfVertices));
+        v = mth.vertexListFromData(v);
+
+        if (loadMatr != mth.UnitMatrix) {
+            for (let i = 0; i < v.length; i++) {
+                v.pos = mth.PointTransform(v.pos, loadMatr);
+                v.normal = mth.VectorTransform(v.normal, loadMatrInv);
+            }
+        }
         let ind = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * numOfFacetIndices));
+
+        mdl.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLE_STRIP, v, ind));
     }
-}
+    return mdl;
+}              

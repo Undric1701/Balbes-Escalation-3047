@@ -135,3 +135,7 @@ export function texture(...args) {
         return new _texture(args[0], "cube");
     return new _texture(...args);
 } // End of 'texture' function
+
+export function texCreateFromVec4(v) {
+    return texture();
+}

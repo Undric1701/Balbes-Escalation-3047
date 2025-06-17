@@ -2,28 +2,8 @@
 
 import * as res from "./res.js"
 import * as mth from "../../../mth/mth.js"
-/*
-typedef struct tagtwrMATERIAL
-{
-  CHAR Name[TWR_STR_MAX];             
-  twrMATERIAL_PATTERN *MtlPat;         
-  twrTRANSPARENCY_FLAG IsTrans;        
-  FLT Trans;                           
-  BOOL IsShadowCast;                   
-  INT RefCounter;                      
-  UINT64 StoreFrameNo;                 
-                                       
-  INT NumOfBuffers;                    
-  twrBUFFER *Bufs[TWR_MAX_BUFFERS];    
-  INT NumOfTextures;                   
-  twrTEXTURE *Texs[TWR_MAX_TEXTURES];  
-  twrPRIM *FirstDraw;                  
-                                       
-  twrMATERIAL *NextDraw;                                                      
-} twrMATERIAL;
-*/
 
-export class Material {
+export class _material {
     //constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
     constructor(name) {
         try {
@@ -38,9 +18,9 @@ export class Material {
             this.ks = mth.Vec4(0.3, 0.3, 0.3, 1);
             this.ph = 30;
             this.trans = 1;
-            this.texturesCount = 0;
+            this.numOfTextures = 8;
             this.referenceCount = 0;
-
+            this.shaderNo = res.defaultShaderNo;
             /*
             if (shaderProgramNo !== undefined) {
                 this.shaderNo = shaderProgramNo;
@@ -84,3 +64,13 @@ export class Material {
 
 }
 
+export function material(name) {
+    return new _material(name);
+}
+
+export let defaultMaterial;
+
+export async function materialsInit() {
+    defaultMaterial = material("default material");
+
+}
