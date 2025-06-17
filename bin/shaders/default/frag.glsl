@@ -8,7 +8,7 @@ in vec2 drawTC;
 in vec3 drawNormal;
 in vec3 drawWPos;
 
-uniform sampler2D TKd;
+uniform sampler2D Texture0;
 
 uniform float u_time;   
 uniform vec3 camDir;   
@@ -19,9 +19,10 @@ void main() {
     vec3 N = -faceforward(drawNormal, V, drawNormal);
     float nl = max(0.1, max(dot(N, -camDir), dot(N, camDir)));
     o_color = vec4(drawColor.rgb * nl, drawColor.a); 
-    o_color = vec4(N, 1);  
-    o_color = vec4(drawNormal, 1); 
-    o_color  = texture(TKd, drawTC);
+    //o_color = vec4(N, 1);  
+    //o_color = vec4(drawNormal, 1); 
+    o_color  = vec4(texture(Texture0, drawTC).rgb, 1);
+    
     //o_color += tex_color.rgb;
     //o_color = vec4(normalize(drawWPos), 1);
 }

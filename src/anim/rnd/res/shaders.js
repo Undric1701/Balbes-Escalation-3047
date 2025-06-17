@@ -116,5 +116,6 @@ export async function shadersInit() {
   shds = [];
   numOfShds = 0;
   await shdsLoad("default");
+  shds[0].updateData();
   matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
 }

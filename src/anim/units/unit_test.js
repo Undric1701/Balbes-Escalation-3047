@@ -58,8 +58,8 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        //this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
-        this.model.draw(mth.MatrScale(mth.Vec3(0.1, 0.1, 0.1)));
+        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
+        this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrRotate(animation.timer.time, mth.Vec3(0, 1, 0))));
     }
 }
 

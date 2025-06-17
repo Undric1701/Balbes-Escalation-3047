@@ -11,7 +11,7 @@ export class _Vec4 {
         return [this.x, this.y, this.z, this.w];
     }
     toArray = () => {
-        return new Float32Array[this.x, this.y, this.z, this.w];
+        return new Float32Array([this.x, this.y, this.z, this.w]);
     }
 }
 export function Vec4(x, y, z, w) {

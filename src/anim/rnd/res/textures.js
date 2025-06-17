@@ -1,3 +1,6 @@
+
+import * as mth from "../../../mth/mth.js"
+
 class _texture {
     // possible types: 2d, cube, target
     constructor(nameURL, textureType = "2d") {
@@ -107,13 +110,14 @@ class _texture {
 
     apply(shd, texUnit, name = null) {
         let uniform_name = name ? name : "Texture" + texUnit;
-        if (shd == undefined || shd.id == undefined || shd.id == null || shd.uniforms[uniform_name] == undefined)
+        if (shd == undefined || shd.progId == undefined || shd.progId == null || shd.uniforms[uniform_name] == undefined)
             return;
         gl.activeTexture(gl.TEXTURE0 + texUnit);
         gl.bindTexture(this.type, this.id);
         gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
     } // End of 'apply' function
 
+    /*
     apply(shd, texUnit, name = null) {
         let uniform_name = name ? name : "Texture" + texUnit;
         if (shd == undefined || shd.id == undefined || shd.id == null || shd.uniforms[uniform_name] == undefined)
@@ -122,7 +126,7 @@ class _texture {
         gl.bindTexture(this.type, this.id);
         gl.uniform1i(shd.uniforms[uniform_name].loc, texUnit);
     } // End of 'apply' function
-
+     */
     free = () => {
         if (--this.referenceCount <= 0) {
             window.global.deleteTexture(this.texID);
@@ -219,7 +223,11 @@ export function createTexture(textureName, width, height, isMipmap, glType, pixe
 
     if (pixelsBits) {
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, pixelsBits);
+        if (type == gl.FLOAT) {
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, new Float32Array(pixelsBits));
+        } else {
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, new Uint8Array(pixelsBits));
+        }
     }
 
     if (isMipmap) {
@@ -246,4 +254,8 @@ export function createTexture(textureName, width, height, isMipmap, glType, pixe
     */
 
     return t;
+}
+
+export function texCreateFromVec4(vec4) {
+    return createTexture(`tex from vec4: ${vec4}`, 1, 1, false, gl.RGBA32F, vec4.toArray())
 }

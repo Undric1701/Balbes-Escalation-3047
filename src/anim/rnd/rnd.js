@@ -24,10 +24,8 @@ export class Render {
         gl.clearColor(0.30, 0.47, 0.8, 1.0);
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        console.log("Render start");
     }
     renderEnd = () => {
-        console.log("Render end");
     }
     renderResize = (w, h) => {
         this.w = w;

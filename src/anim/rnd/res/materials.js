@@ -34,7 +34,7 @@ export class _material {
     }
     apply = () => {
         res.shaderApply(this.shaderNo);
-        for (let i = 0; i < this.texturesCount; i++) {
+        for (let i = 0; i < this.numOfTextures; i++) {
             if (this.textures[i] != undefined) {
                 this.textures[i].apply(res.shds[this.shaderNo], i);
             }
@@ -46,7 +46,7 @@ export class _material {
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "camDir"), window.animation.cam.dir.toArray()[0], window.animation.cam.dir.toArray()[1], window.animation.cam.dir.toArray()[2]);
     }
     bindTex = (no, texture) => {
-        if (no >= 0 && no < this.texturesCount) {
+        if (no >= 0 && no < this.numOfTextures) {
             this.textures[no >> 0] = texture;
         }
     }

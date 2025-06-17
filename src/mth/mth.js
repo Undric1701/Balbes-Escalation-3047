@@ -51,7 +51,7 @@ export function Vertex(pos, texCoord, normal, color) {
     return new _Vertex(pos, texCoord, normal, color);
 }
 
-export function VertexList(posList, texCoordList, colorsList, normalsList) {
+export function VertexList(posList, texCoordList, normalsList, colorsList) {
     let vertexList = [];
     for (let i = 0; i < posList.length; i++) {
         vertexList[i] = Vertex(posList[i], texCoordList[i], normalsList[i], colorsList[i],);
