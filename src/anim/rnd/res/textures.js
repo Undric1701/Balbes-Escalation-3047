@@ -1,7 +1,7 @@
 
 
 export class Texture {
-    constructor() {
+    constructor(...args) {
         ///...
     }
     free = () => {

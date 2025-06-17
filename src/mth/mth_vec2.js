@@ -26,7 +26,7 @@ export function Vec2MulVec2(v1, v2) {
     return Vec2(v1.x * v2.x, v1.y * v2.y);
 }
 export function Vec2MulNum(v1, n) {
-    return Vec3(v1.x * n, v1.y * n);
+    return Vec2(v1.x * n, v1.y * n);
 }
 export function Vec2DivNum(v, n) {
     if (n != 0)

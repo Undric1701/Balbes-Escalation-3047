@@ -1,6 +1,7 @@
 /* AT7, 14.06.2025, materials module */
 
 import * as res from "./res.js"
+import * as mth from "../../../mth/mth.js"
 /*
 typedef struct tagtwrMATERIAL
 {
@@ -23,26 +24,30 @@ typedef struct tagtwrMATERIAL
 */
 
 export class Material {
-    constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
+    //constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
+    constructor(name) {
         try {
             if (typeof name == "string") {
                 this.name = name;
             } else {
                 throw new Error("Invalid name");
             }
-            this.textures = new Array(texCount);
-            this.ka = ka;
-            this.kd = kd;
-            this.ks = ks;
-            this.ph = ph;
-            this.trans = trans;
-            this.texturesCount = texCount;
+            this.textures = new Array(8);
+            this.ka = mth.Vec4(0.2, 0.2, 0.2, 1);
+            this.kd = mth.Vec4(0.5, 0.5, 0.5, 1)
+            this.ks = mth.Vec4(0.3, 0.3, 0.3, 1);
+            this.ph = 30;
+            this.trans = 1;
+            this.texturesCount = 0;
             this.referenceCount = 0;
+
+            /*
             if (shaderProgramNo !== undefined) {
                 this.shaderNo = shaderProgramNo;
             } else {
                 this.shaderNo = shd.defaultShaderNo;
-            }
+            } 
+            */
         } catch (err) {
             console.log(err);
         }

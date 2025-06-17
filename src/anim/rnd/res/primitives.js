@@ -1,9 +1,10 @@
 /* AT7, 14.06.2025, primitives module */
 import * as mth from "../../../mth/mth.js";
+import * as res from "./res.js"
 
 export class Prim {
     constructor(mtl, type, vertArr, indArr) {
-        let i, gl = window.gl;
+        let i;
         this.type = type;
 
         //gl.GenVertexArrays(1, &Pr->VA);
@@ -52,18 +53,16 @@ export class Prim {
         this.mtl = mtl;
     }
     free = () => {
-        let gl = window.gl
         gl.bindVertexArray(this.VA);
         /* Disconnect buffer */
-        gl.bindBuffer(gl.ARRAY_BUFFER, 0);
+        //gl.bindBuffer(gl.ARRAY_BUFFER, 0);
         gl.deleteBuffer(this.VBuf);
         gl.deleteBuffer(this.IBuf);
         /* Deactivete vertex array */
         //gl.bindVertexArray(0);
-        gl.deleteVertexArrays(this.VA);
+        gl.deleteVertexArray(this.VA);
     }
     draw(matrW) {
-        let gl = window.gl;
         this.mtl.apply();
         try {
             if (this.type === undefined) {
@@ -75,7 +74,7 @@ export class Prim {
                 matrW = this.matrW;
             }
 
-
+            gl.uniformMatrix4fv(res.matrWLocation, false, mth.float32ArrayFromMatr(matrW), 0, 16);
 
             gl.bindVertexArray(this.VA);
 

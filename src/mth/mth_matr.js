@@ -180,5 +180,6 @@ export function MatrFrustum(l, r, b, t, n, f) {
 }
 
 export function float32ArrayFromMatr(matr) {
-    return new Float32Array(matr.a[0].concat(matr.a[1].concat(matr.a[2].concat(matr.a[3]))), 0, 16);
+    return new Float32Array(matr.a[0].concat(matr.a[1], matr.a[2], matr.a[3]));
+    //return new Float32Array([].concat(...matr));
 }

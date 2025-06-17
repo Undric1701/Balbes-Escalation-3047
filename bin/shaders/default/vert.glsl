@@ -10,9 +10,9 @@ uniform mat4 matrW;
 uniform mat4 matrInv;
 uniform vec3 camDir;
 uniform vec3 camLoc;
-                  
+
 void main() {
-    gl_Position = /*matrWVP * */ vec4(in_pos, 1);
+    gl_Position = matrW * vec4(in_pos, 1);
     vec3 v = normalize(mat3(matrInv) * in_pos - camLoc);
     vec3 n = normalize(in_normal);
     n = faceforward(n, v, n);
