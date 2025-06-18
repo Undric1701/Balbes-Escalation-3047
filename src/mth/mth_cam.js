@@ -1,5 +1,5 @@
-import {matr, MatrView, MatrFrustum, MatrMulMatr} from "./mth_matr.js"
-import {Vec3} from "./mth_vec3.js"
+import { matr, MatrView, MatrFrustum, MatrMulMatr } from "./mth_matr.js"
+import { Vec3 } from "./mth_vec3.js"
 import * as mth from "./mth.js"
 
 export class _camera {
@@ -20,7 +20,7 @@ export class _camera {
     this.matrView = MatrView(loc, at, up);
     this.loc = Vec3(loc);
     this.at = Vec3(at);
-     this.dir = Vec3(
+    this.dir = Vec3(
       -this.matrView.a[0][2],
       -this.matrView.a[1][2],
       -this.matrView.a[2][2]
@@ -37,7 +37,7 @@ export class _camera {
     );
     this.matrVP = MatrMulMatr(this.matrView, this.matrProj);
   }
-  
+
   setProj(projSize, projDist, projFarClip) {
     let rx = projSize,
       ry = projSize;
@@ -46,9 +46,9 @@ export class _camera {
     this.projSize = projSize;
     this.projFarClip = projFarClip;
 
-    if (this.frameW > this.frameH) 
+    if (this.frameW > this.frameH)
       rx *= this.frameW / this.frameH;
-    else 
+    else
       ry *= this.frameH / this.frameW;
     this.matrProj = MatrFrustum(
       -rx / 2.0,
@@ -71,7 +71,7 @@ export class _camera {
   }
 
   setDef() {
-    this.loc = Vec3(8, 0, 8);
+    this.loc = Vec3(8, 8, 8);
     this.at = Vec3(0, 0, 0);
     this.up = Vec3(0, 1, 0);
 
@@ -97,20 +97,19 @@ let isA = false;
 
 export function control(event) {
   let Dist = mth.Vec3Len(mth.Vec3SubVec3(window.animation.cam.at, window.animation.cam.loc));
-  
-  let cosT = (window.animation.cam.loc.y - window.animation.cam.at.y) / Dist, 
-  sinT = Math.sqrt(1 - cosT * cosT),
-  plen = Dist * sinT,
-  cosP = (window.animation.cam.loc.z - window.animation.cam.at.z) / plen,
-  sinP = (window.animation.cam.loc.x - window.animation.cam.at.x) / plen,
-  Azimuth = mth.radian2Degrees(Math.atan2(sinP, cosP)),
-  Elevator = mth.radian2Degrees(Math.atan2(sinT, cosT)),
-  speed = 1.8;
+
+  let cosT = (window.animation.cam.loc.y - window.animation.cam.at.y) / Dist,
+    sinT = Math.sqrt(1 - cosT * cosT),
+    plen = Dist * sinT,
+    cosP = (window.animation.cam.loc.z - window.animation.cam.at.z) / plen,
+    sinP = (window.animation.cam.loc.x - window.animation.cam.at.x) / plen,
+    Azimuth = mth.radian2Degrees(Math.atan2(sinP, cosP)),
+    Elevator = mth.radian2Degrees(Math.atan2(sinT, cosT)),
+    speed = 1.8;
 
   Dist = 0.30;
-    
-  if (event.key == 'w' || event.key == 'W' || event.key == 's' || event.key == 'S')
-  {
+
+  if (event.key == 'w' || event.key == 'W' || event.key == 's' || event.key == 'S') {
     let Dir = Vec3(0, 0, 0);
 
     if (event.key == 's' || event.key == 'S')
@@ -141,8 +140,8 @@ export function control(event) {
       Elevator = 178.90;
 
     window.animation.cam.set(mth.PointTransform(Vec3(0, Dist, 0), mth.MatrMulMatr3(mth.MatrRotateX(Elevator), mth.MatrRotateY(Azimuth), mth.MatrTranslate(window.animation.cam.at))),
-                            window.animation.cam.at,
-                            Vec3(0, 1, 0));
+      window.animation.cam.at,
+      Vec3(0, 1, 0));
     if (!isA) {
       window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3(8, 0, 8)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3(8, 0, 8));
       window.animation.cam.set(window.animation.cam.loc, window.animation.cam.at, window.animation.cam.up);

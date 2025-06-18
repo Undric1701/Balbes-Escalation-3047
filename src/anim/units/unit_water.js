@@ -1,42 +1,53 @@
-/* AT7, 16.06, unit test sample */
+/* AT7, 18.06, unit test sample */
 import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
+
+function gridCreate(w, h, size) {
+    let v = []
+    for (let i = 0; i < h; i++)
+        for (let j = 0; j < w; j++) {
+            let vert = mth.Vertex(mth.Vec3(j / (w - 1) * size, 0, i / (h - 1) * size),
+                mth.Vec2(j / (w - 1) * size, i / (h - 1) * size),
+                mth.Vec3(0, 1, 0),
+                mth.Vec4(0.4, 0.4, 0.7, 0.7));
+            v.push(vert);
+            /*
+            v[i * w + j].pos = Vec3Set(j, 0, i);
+            v[i * w + j].normal = Vec3Set(0, 1, 0);
+            v[i * w + j].T.X = (j / (W - 1.0));
+            v[i * w + j].T.Y = (i / (H - 1.0));
+            v[i * w + j].C = Vec4Set1(1);
+            */
+        }
+
+    let ind = [];
+    /* Create indices for land grid */
+    for (let i = 0, k = 0; i < h - 1; i++) {
+        for (let j = 0; j < w; j++) {
+            ind[k++] = (i + 1) * w + j;
+            ind[k++] = i * w + j;
+        }
+        if (i != w - 2)
+            ind[k++] = -1;
+    }
+
+
+    return [v, ind];
+}
 
 export class Unit_Water {
     constructor() {
 
     };
     async init() {
-        this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
-        this.mtl.bindTex(0, res.texture("./water.jpg", "2d"));
+        this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));
+        await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
+        //this.mtl.shaderNo = await res.shdsLoad("samples/water");
+        this.mtl.bindTex(1, res.texture("./water.jpg", "2d"));
 
-        let a = 30;
-        let points = [
-            mth.Vec3(-a, 0, -a),
-            mth.Vec3(a, 0, -a),
-            mth.Vec3(-a, 0, a),
-            mth.Vec3(a, 0, a)
-        ];
-        let normals = [
-            mth.Vec3(0, 1, 0),
-            mth.Vec3(0, 1, 0),
-            mth.Vec3(0, 1, 0),
-            mth.Vec3(0, 1, 0)
-        ];
-        let color = new Array(points.length).fill(mth.Vec4(0.9, 0.9, 0.9, 1));
-        let texCoords = new Array(points.length).fill(mth.Vec2(0, 0));
-        texCoords = [
-            mth.Vec2(0, 0),
-            mth.Vec2(a, 0),
-            mth.Vec2(0, a),
-            mth.Vec2(a, a),
-        ];
+        let water_grid = gridCreate(100, 100, 50);
 
-        let indices = [0, 1, 2, 1, 2, 3];
-
-        let vertices = mth.VertexList(points, texCoords, normals, color);
-
-        this.water = res.prim(this.mtl, gl.TRIANGLES, vertices, indices);
+        this.water = res.prim(this.mtl, gl.TRIANGLE_STRIP, water_grid[0], water_grid[1]);
     }
     close = () => {
         //this.prim.draw(mth.UnitMatrix);
