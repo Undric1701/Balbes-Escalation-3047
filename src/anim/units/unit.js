@@ -1,5 +1,5 @@
 export * from "./unit_test.js"
-
+export * from "./unit_player.js"
 /*
 export class Unit {
     constructor() {

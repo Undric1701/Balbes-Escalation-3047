@@ -49,6 +49,7 @@ export class Unit_Test {
         let vertices = mth.VertexList(points, texCoords, color, normals);
 
         this.prim = res.prim(this.mtl, window.gl.TRIANGLES, vertices, Indices);
+
         this.model = await res.loadG3DM("../../../../bin/models/warshipal.g3dm");
     }
     close = () => {
@@ -58,8 +59,8 @@ export class Unit_Test {
         //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
-        this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrRotate(animation.timer.time, mth.Vec3(0, 1, 0))));
+        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time * 0, mth.Vec3(204, 130, 102)), mth.MatrScale(mth.Vec3(2, 2, 2))));
+        this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrRotate(animation.timer.time * 0, mth.Vec3(0, 1, 0))));
     }
 }
 

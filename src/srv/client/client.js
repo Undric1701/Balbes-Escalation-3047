@@ -2,6 +2,7 @@
 
 import * as Anim from "../../../src/anim/anim.js"
 import * as unit from "../../anim/units/unit.js"
+import { control } from "../../mth/mth_cam.js"
 
 let socket;
 export async function openWebsocketCommunication() {
@@ -46,6 +47,12 @@ export async function startAnimation() {
         window.animation = Animation;
     }
     await Animation.animAddUnit(new unit.Unit_Test());
+    await Animation.animAddUnit(new unit.Unit_Player());
+    document.addEventListener('keydown', function(event) {
+        if (event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q'|| event.key == 'e' || event.key == 'E') {
+            control(event);
+        }
+    });
     /*                                        
     let canvas = document.getElementById("webgl-canvas");
     gl = canvas.getContext("webgl2");

@@ -1,6 +1,6 @@
 /* AT7, 13.06.2025, math module: matrices module */
 
-import { PI } from "./mth.js"
+import { degrees2Radian } from "./mth.js"
 
 import * as Vec3s from "./mth_vec3.js"
 
@@ -38,6 +38,57 @@ export function MatrScale(S) {
         0, 0, S.z, 0,
         0, 0, 0, 1);
 }
+
+export function MatrRotateZ(AngleInDegree) {
+  let m = new Matr();
+  let a = degrees2Radian(AngleInDegree);
+  let co = Math.cos(a),
+    si = Math.sin(a);
+
+  m.a =
+  [    
+      [co, si, 0, 0],
+      [-si, co, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 1],
+  ];
+  
+  return m;
+}
+
+export function MatrRotateY(AngleInDegree) {
+  let m = new Matr();
+  let a = degrees2Radian(AngleInDegree);
+  let co = Math.cos(a),
+    si = Math.sin(a);
+
+  m.a =
+  [    
+      [co, 0, -si, 0],
+      [0, 1, 0, 0],
+      [si, 0, co, 0],
+      [0, 0, 0, 1],
+  ];
+  return m;
+}
+
+export function MatrRotateX(AngleInDegree) {
+  let m = new Matr();
+  let a = degrees2Radian(AngleInDegree);
+  let co = Math.cos(a),
+    si = Math.sin(a);
+
+  m.a =
+  [    
+      [1, 0, 0, 0],
+      [0, co, si, 0],
+      [0, -si, co, 0],
+      [0, 0, 0, 1],
+  ];
+
+  return m;
+}
+
 export function MatrRotate(AngleInDegree, R) {
     let a = AngleInDegree * Math.PI,
         sine = Math.sin(a),
@@ -196,6 +247,9 @@ export function MatrMulMatr(M1, M2) {
         M1.a[3][0] * M2.a[0][3] + M1.a[3][1] * M2.a[1][3] + M1.a[3][2] * M2.a[2][3] + M1.a[3][3] * M2.a[3][3])
     return r;
 }
+export function MatrMulMatr3(M1, M2, M3) {
+    return MatrMulMatr(MatrMulMatr(M1, M2), M3);
+}
 export function MatrView(Loc, At, Up1) {
     let Dir = Vec3s.Vec3Normalize(Vec3s.Vec3SubVec3(At, Loc));
     let Right = Vec3s.Vec3Normalize(Vec3s.Vec3CrossVec3(Dir, Up1));
@@ -218,4 +272,8 @@ export function MatrFrustum(l, r, b, t, n, f) {
 export function float32ArrayFromMatr(matr) {
     //return new Float32Array(matr.a[0].concat(matr.a[1].concat(matr.a[2].concat(matr.a[3]))), 0, 16);
     return new Float32Array(matr.a[0].concat(matr.a[1], matr.a[2], matr.a[3]));
+}
+
+export function matr(...args) {
+    return new Matr(...args);
 }

@@ -1,54 +1,6 @@
-/* AT7, 13.06.2025, math module: camera module */
-//!!!!!!!!!!! Not final version!!! Needs to be talked over
-
-/*
-export class Camera {
-    constructor(loc, at, up, w, h, projSize, projDist, farClip) {
-        this.matrView = MatrView(loc, at, up);
-        this.loc = loc;
-        this.at = at;
-        this.up = Vec3Set(this.matrView.a[0][1], this.matrView.a[1][1], this.matrView.a[2][1]);
-        this.Right = Vec3Set(this.matrView.a[0][0], this.matrView.a[1][0], this.matrView.a[2][0]);
-        this.Dir = Vec3Set(-this.matrView.a[0][2], -this.matrView.a[1][2], -this.matrView.a[2][2]);
-        this.matrProj = CamSetProj(w, h, projSize, projDist, farClip);
-        this.matrVP = MatrMulMatr(this.matrView, this.matrProj);
-    }
-    camUpdate = (loc, at, up) => {
-        this.matrView = MatrView(loc, at, up);
-        this.loc = loc;
-        this.at = at;
-        this.up = Vec3Set(this.matrView.a[0][1], this.matrView.a[1][1], this.matrView.a[2][1]);
-        this.Right = Vec3Set(this.matrView.a[0][0], this.matrView.a[1][0], this.matrView.a[2][0]);
-        this.Dir = Vec3Set(-this.matrView.a[0][2], -this.matrView.a[1][2], -this.matrView.a[2][2]);
-        this.matrProj = CamSetProj(w, h, projSize, projDist, farClip);
-        this.matrVP = MatrMulMatr(this.matrView, this.matrProj);
-    }
-    locAdd = (v) => {
-        this.loc = Vec3AddVec3(this.loc, v);
-        this.camUpdate(this.loc, this.at, this.up);
-    }
-    atUpdate = (dir) => {
-        this.at = Vec3AddVec3(this.loc, dir);
-        this.camUpdate(this.loc, this.at, this.up);
-    }
-}
-
-export function CamSetProj(W, H, ProjSize, ProjDist, ProjFarClip) {
-    let Wp = ProjSize, Hp = ProjSize;
-    if (W >= H)
-        Wp *= W / H;
-    else
-        Hp *= H / W;
-    return MatrFrustum(-Wp / 2, Wp / 2, -Hp / 2, Hp / 2, ProjDist, ProjFarClip);
-}
-*/
-
-import {Matr, MatrView, MatrFrustum, MatrMulMatr} from "./mth_matr.js"
+import {matr, MatrView, MatrFrustum, MatrMulMatr} from "./mth_matr.js"
 import {Vec3} from "./mth_vec3.js"
-
-function matr(...args) {
-    return new Matr(...args);
-}
+import * as mth from "./mth.js"
 
 export class _camera {
   constructor() {
@@ -94,8 +46,10 @@ export class _camera {
     this.projSize = projSize;
     this.projFarClip = projFarClip;
 
-    if (this.frameW > this.frameH) rx *= this.frameW / this.frameH;
-    else ry *= this.frameH / this.frameW;
+    if (this.frameW > this.frameH) 
+      rx *= this.frameW / this.frameH;
+    else 
+      ry *= this.frameH / this.frameW;
     this.matrProj = MatrFrustum(
       -rx / 2.0,
       rx / 2.0,
@@ -117,7 +71,7 @@ export class _camera {
   }
 
   setDef() {
-    this.loc = Vec3(8, 4.7, 3);
+    this.loc = Vec3(8, 0, 8);
     this.at = Vec3(0, 0, 0);
     this.up = Vec3(0, 1, 0);
 
@@ -137,4 +91,62 @@ export class _camera {
 
 export function camera() {
   return new _camera();
+}
+
+let isA = false;
+
+export function control(event) {
+  let Dist = mth.Vec3Len(mth.Vec3SubVec3(window.animation.cam.at, window.animation.cam.loc));
+  
+  let cosT = (window.animation.cam.loc.y - window.animation.cam.at.y) / Dist, 
+  sinT = Math.sqrt(1 - cosT * cosT),
+  plen = Dist * sinT,
+  cosP = (window.animation.cam.loc.z - window.animation.cam.at.z) / plen,
+  sinP = (window.animation.cam.loc.x - window.animation.cam.at.x) / plen,
+  Azimuth = mth.radian2Degrees(Math.atan2(sinP, cosP)),
+  Elevator = mth.radian2Degrees(Math.atan2(sinT, cosT)),
+  speed = 1.8;
+
+  Dist = 0.30;
+    
+  if (event.key == 'w' || event.key == 'W' || event.key == 's' || event.key == 'S')
+  {
+    let Dir = Vec3(0, 0, 0);
+
+    if (event.key == 's' || event.key == 'S')
+      Dir = mth.Vec3Neg(window.animation.cam.dir);
+    if (event.key == 'w' || event.key == 'W')
+      Dir = Vec3(window.animation.cam.dir);
+
+    if ((event.key == 's' && event.key == 'w') || (event.key == 'S' && event.key == 'W') || (event.key == 's' && event.key == 'W') || (event.key == 'S' && event.key == 'w'))
+      Dir = Vec3(0, 0, 0);
+
+    window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3MulNum(Dir, 0.30)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3MulNum(Dir, 0.30));
+    window.animation.cam.set(window.animation.cam.loc, window.animation.cam.at, window.animation.cam.up);
+  } else if (event.key == 'a' || event.key == 'A' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
+    if (event.key == 'a' || event.key == 'A')
+      Azimuth += speed;
+    if (event.key == 'd' || event.key == 'D')
+      Azimuth -= speed;
+
+    if (event.key == 'e' || event.key == 'E')
+      Elevator += speed;
+
+    if (event.key == 'q' || event.key == 'Q')
+      Elevator -= speed;
+
+    if (Elevator < 0.08)
+      Elevator = 0.08;
+    else if (Elevator > 178.90)
+      Elevator = 178.90;
+
+    window.animation.cam.set(mth.PointTransform(Vec3(0, Dist, 0), mth.MatrMulMatr3(mth.MatrRotateX(Elevator), mth.MatrRotateY(Azimuth), mth.MatrTranslate(window.animation.cam.at))),
+                            window.animation.cam.at,
+                            Vec3(0, 1, 0));
+    if (!isA) {
+      window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3(8, 0, 8)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3(8, 0, 8));
+      window.animation.cam.set(window.animation.cam.loc, window.animation.cam.at, window.animation.cam.up);
+      isA = true;
+    }
+  }
 }

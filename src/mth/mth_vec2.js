@@ -2,8 +2,24 @@
 
 export class _Vec2 {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        if (x == undefined){ 
+            this.x = 0;
+            this.y = 0;
+        } else if (typeof x == "object") {
+            if (x.length == 3) { 
+                this.x = x[0];
+                this.y = x[1];
+            } else {
+                this.x = x.x;
+                this.y = x.y;
+            }
+        } else if (y == undefined) {
+            this.x = x;
+            this.y = x;
+        } else { 
+            this.x = x;
+            this.y = y;
+        }
     }
     toList = () => {
         return [this.x, this.y];

@@ -12,6 +12,15 @@ export * from "./mth_cam.js"
 
 export let PI = 3.14159265358979323846;
 
+export function degrees2Radian(A) {
+  return (A * Math.PI) / 180.0;
+}
+
+export function radian2Degrees(A) {
+  return (A * 180.0) / Math.PI;
+}
+
+
 export class _Vertex {
     constructor(pos, texCoord, normal, color) {
         if (pos != undefined) {
