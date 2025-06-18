@@ -8,7 +8,7 @@ export class Unit_Water {
     };
     async init() {
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 30, 1, res.defaultShaderNo, 0);
-        this.mtl.bindTex(0, res.texture("./water.jpg", "2d"));
+        this.mtl.bindTex(1, res.texture("./water1.png", "2d"));
 
         let a = 30;
         let points = [
