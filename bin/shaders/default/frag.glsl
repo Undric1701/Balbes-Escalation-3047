@@ -12,7 +12,23 @@ uniform sampler2D Texture0;
 
 uniform float u_time;   
 uniform vec3 camDir;   
-uniform vec3 camLoc;   
+uniform vec3 camLoc;  
+
+vec3 Shade( vec3 P, vec3 N, vec3 Kd, vec3 Ks, float Ph, vec3 LDir, vec3 LColor )
+{
+  vec3 color = vec3(0);
+  vec3 V = normalize(P - camLoc);
+  //N = faceforward(N, V, N);
+  
+  // Diffuse
+  /*color += max(0, dot(N, LDir)) * Kd * LColor;
+  // Specular
+  vec3 R = reflect(V, N);
+  color += pow(max(0, dot(R, LDir)), Ph) * Ks * LColor;
+  //return N;
+  */
+  return color;
+}   
 
 void main() {         
     vec3 V = normalize(drawWPos - camLoc);
