@@ -81,7 +81,8 @@ export async function loadG3DM(filename, loadMatr) {
         let GLType;
 
         //name = dataBuffer.slice(curpos, curpos += 300);
-        name = (buffer.slice(curpos, curpos += 300)).reduce((res_str, ch) => res_str += String.fromCharCode(ch), "");
+        //name = (buffer.slice(curpos, curpos += 300)).reduce((res_str, ch) => res_str += String.fromCharCode(ch), "");
+        name = (buffer.slice(curpos, curpos += 300)).reduce((res_str, ch) => res_str += ch == 0 ? "" : String.fromCharCode(ch), "");
         let [w, h, c] = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * 3));
         //w = dataBuffer.slice(curpos, curpos += 4);
         //h = dataBuffer.slice(curpos, curpos += 4);
@@ -93,7 +94,7 @@ export async function loadG3DM(filename, loadMatr) {
         } else {
             GLType = gl.RGBA8;
         }
-        let texData = dataBuffer.slice(curpos, curpos += c * w * h);
+        let texData = new Uint8Array(dataBuffer.slice(curpos, curpos += c * w * h));
         texs[t] = res.createTexture(name, w, h, true, GLType, texData);
     }
 
@@ -101,6 +102,7 @@ export async function loadG3DM(filename, loadMatr) {
     for (let m = 0; m < numOfMaterials; m++) {
         //let fmat = dataBuffer.slice(curpos, curpos += 300 + (9 + 1 + 1 + 8 * 2) * 4 + 300 + 8);
         let fmat_name = (buffer.slice(curpos, curpos += 300)).reduce((res_str, ch) => res_str += ch == 0 ? "" : String.fromCharCode(ch), "");
+        //let fmat_name = (buffer.slice(curpos, curpos += 300)).reduce((res_str, ch) => res_str += String.fromCharCode(ch), "");    
         let s = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 11));
         let txtarr = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 8));
 
@@ -119,23 +121,23 @@ export async function loadG3DM(filename, loadMatr) {
         mtls[m] = res.material(fmat_name);
         curpos += 300 + 4;
 
-        mtls[m].bindTex(0, res.texCreateFromVec4(mth.Vec4(mtl.sh.ka.x, mtl.sh.ka.y, mtl.sh.ka.z, 0)));
+        mtls[m].bindTex(0, res.texCreateFromVec4(mth.Vec4(mtl.sh.ka, 0)));
 
         //Mtls[m] = Twr -> MtlCreate(fmat -> Name, MtlPat, trans_flag);
         //sprintf(Buf, "%s.g3dm %s Ka texture", FName, fmat -> Name);
         //Twr -> MtlBindTex(Mtls[m], 0, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Ka, 0)));
         //Mtls[m] -> Trans = fmat -> Trans;
-        if (mtl.txs[0] == -1) {
+        if (mtl.txs[0] == NaN) {
             mtls[m].bindTex(1, res.texCreateFromVec4(mth.Vec4(mtl.sh.kd.toList(), 0)));
         } else {
             mtls[m].bindTex(1, texs[mtl.txs[0]]);
         }
-        if (mtl.txs[1] == -1) {
+        if (mtl.txs[1] == NaN) {
             mtls[m].bindTex(3, res.texCreateFromVec4(mth.Vec4(0.2, 0.2, 0.2, 0)));
         } else {
             mtls[m].bindTex(3, texs[mtl.txs[1]]);
         }
-        if (mtl.txs[2] == -1) {
+        if (mtl.txs[2] == NaN) {
             mtls[m].bindTex(2, res.texCreateFromVec4(mth.Vec4(mtl.sh.ks.toArray(), mtl.sh.ph)));
         } else {
             mtls[m].bindTex(2, texs[mtl.txs[2]]);
@@ -155,7 +157,7 @@ export async function loadG3DM(filename, loadMatr) {
         }
         let ind = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * numOfFacetIndices));
 
-        mdl.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLE_STRIP, v, ind), loadMatr);
+        mdl.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLES, v, ind), loadMatr);
     }
     return mdl;
 }              

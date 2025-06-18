@@ -223,11 +223,7 @@ export function createTexture(textureName, width, height, isMipmap, glType, pixe
 
     if (pixelsBits) {
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        if (type == gl.FLOAT) {
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, new Float32Array(pixelsBits));
-        } else {
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, new Uint8Array(pixelsBits));
-        }
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, format, type, convertBGRAToRGBA(type, pixelsBits));
     }
 
     if (isMipmap) {
@@ -243,7 +239,7 @@ export function createTexture(textureName, width, height, isMipmap, glType, pixe
 
     gl.bindTexture(gl.TEXTURE_2D, null);
 
-    let t = texture();
+    let t = texture(textureName);
     t.id = tex;
     t.name = textureName;
     t.type = gl.TEXTURE_2D;
@@ -254,6 +250,22 @@ export function createTexture(textureName, width, height, isMipmap, glType, pixe
     */
 
     return t;
+}
+
+export function convertBGRAToRGBA(format, bits) {
+    let res = [];
+
+    for (let i = 0; i < bits.length; i += 4) {
+        res[i] = bits[i + 2];
+        res[i + 1] = bits[i + 1];
+        res[i + 2] = bits[i];
+        res[i + 3] = bits[i + 3];
+    }
+    if (format == gl.FLOAT) {
+        return new Float32Array(res);
+    } else {
+        return new Uint8Array(res);
+    }
 }
 
 export function texCreateFromVec4(vec4) {
