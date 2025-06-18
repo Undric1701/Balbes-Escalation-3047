@@ -1,4 +1,5 @@
 import * as test from "./unit_test.js"
+import * as player from "./unit_player.js"
 import * as water from "./unit_water.js"
 /*
 export class Unit {
@@ -17,6 +18,8 @@ export function unitCreate(unit) {
         return water.unitCreate();
     } else if (unit == "test") {
         return test.unitCreate()
+    } else if (unit == "player") {
+        return player.unitCreate()
     }
     //return new Unit();
 }

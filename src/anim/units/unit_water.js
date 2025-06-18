@@ -41,7 +41,7 @@ export class Unit_Water {
     };
     async init() {
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));
-        //this.mtl.shaderNo = res.shdsLoad("samples/water");
+        this.mtl.shaderNo = res.getShdIdByName("samples/water");
         //this.mtl.shaderNo = await res.shdsLoad("samples/water");
         await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
         this.mtl.bindTex(1, res.texture("./water.jpg", "2d"));

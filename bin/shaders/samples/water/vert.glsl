@@ -19,8 +19,8 @@ out vec3 drawWPos;
 void main() {               
     vec3 pos = inPosition;
 
-    pos.y += 0.5 * sin(inPosition.x - inPosition.y + u_time);
-    pos.xz += 0.5 * vec2(sin(inPosition.x + 2.0 * u_time), cos(inPosition.z - 3.0 * u_time));
+    pos.y += 0.18 * sin(inPosition.x - inPosition.y + u_time);
+    pos.xz += 0.08 * vec2(sin(inPosition.x + 2.0 * u_time), cos(inPosition.z - 3.0 * u_time));
     gl_Position = matrWVP * vec4(pos, 1);
     drawColor = inColor;
     drawNormal = normalize(mat3(matrInv) * inNormal);

@@ -89,6 +89,9 @@ export class _prim {
             let winw = mth.MatrTranspose(mth.MatrInverse(w));
             let wvp = mth.MatrMulMatr(w, animation.cam.matrVP);
 
+            if (res.shds[shd].name == "samples/water")
+              gl.uniform1f(res.shds[shd].uniforms["u_time"].loc, window.animation.timer.time);
+
             let loc1 = gl.getUniformLocation(res.shds[shd].progId, "matrWVP");
             if (loc1 != null)
                 gl.uniformMatrix4fv(loc1, false, mth.float32ArrayFromMatr(wvp));

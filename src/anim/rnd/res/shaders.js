@@ -115,9 +115,18 @@ export let defaultShaderNo = 0;
 export let matrWLocation,
   matrVPLocation;
 
+export function getShdIdByName(name) {
+  for (let i = 0; i < shds.length; i++) {
+    if (shds[i].name == name)
+      return i;
+  }
+  return defaultShaderNo;
+}
+
 export async function shadersInit() {
   shds = [];
   numOfShds = 0;
   await shdsLoad("default");
-  //matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
+  await shdsLoad("samples/water");
+  matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
 }

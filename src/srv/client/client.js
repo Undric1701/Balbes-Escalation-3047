@@ -48,6 +48,7 @@ export async function startAnimation() {
     }
     
     await Animation.animAddUnit(new unit.unitCreate("test"));
+    await Animation.animAddUnit(new unit.unitCreate("player"));
     await Animation.animAddUnit(new unit.unitCreate("water"));
     document.addEventListener('keydown', function(event) {
         if (event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q'|| event.key == 'e' || event.key == 'E') {

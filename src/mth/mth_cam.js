@@ -143,7 +143,7 @@ export function control(event) {
       window.animation.cam.at,
       Vec3(0, 1, 0));
     if (!isA) {
-      window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3(8, 0, 8)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3(8, 0, 8));
+      window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3(8, 8, 8)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3(8, 8, 8));
       window.animation.cam.set(window.animation.cam.loc, window.animation.cam.at, window.animation.cam.up);
       isA = true;
     }
