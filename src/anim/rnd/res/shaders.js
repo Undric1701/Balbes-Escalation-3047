@@ -79,11 +79,12 @@ export async function shdsLoad(fileNamePrefix) {
     }
     if (j == -1) {
       shds[numOfShds] = shd(fileNamePrefix, shaderProgram);
-      numOfShds++;
-      return shds[numOfShds - 1];
+      shds[numOfShds].updateData();
+      return numOfShds++;
     } else {
       shds[j] = shd(fileNamePrefix, shaderProgram);
-      return shds[j];
+      shds[j].updateData();
+      return j;
     }
   });
 }
@@ -100,11 +101,13 @@ export function shdsUpdate() {
 }
 
 export function shaderApply(shaderNo) {
-  if (shaderNo != undefined) {
-    gl.useProgram(shds[shaderNo].progId);
-  } else {
-    console.log("there is no shader to apply, applying default");
+  if (shaderNo == undefined || shaderNo instanceof Promise) {
+    console.log("There is no shader to apply, applying default");
     gl.useProgram(shds[defaultShaderNo].progId);
+    return false;
+  } else {
+    gl.useProgram(shds[shaderNo].progId);
+    return true;
   }
 }
 
@@ -112,10 +115,18 @@ export let defaultShaderNo = 0;
 export let matrWLocation,
   matrVPLocation;
 
+export function getShdIdByName(name) {
+  for (let i = 0; i < shds.length; i++) {
+    if (shds[i].name == name)
+      return i;
+  }
+  return defaultShaderNo;
+}
+
 export async function shadersInit() {
   shds = [];
   numOfShds = 0;
   await shdsLoad("default");
-  shds[0].updateData();
+  await shdsLoad("samples/water");
   matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
 }

@@ -5,7 +5,7 @@ import * as mth from "../../../mth/mth.js"
 
 export class _material {
     //constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
-    constructor(name, ka, kdTrans, ksPh) {
+    constructor(name, ka, kdTrans, ksPh, shaderNo) {
         try {
             if (typeof name == "string") {
                 this.name = name;
@@ -31,13 +31,17 @@ export class _material {
             } else {
                 this.ksPh = ksPh;
             }
+            if (shaderNo == undefined) {
+                this.shaderNo = res.defaultShaderNo;
+            } else {
+                this.shaderNo = shaderNo;
+            }
 
             this.bindTex(0, res.texCreateFromVec4(this.ka));
             this.bindTex(1, res.texCreateFromVec4(this.kdTrans));
             this.bindTex(2, res.texCreateFromVec4(this.ksPh));
 
             this.referenceCount = 0;
-            this.shaderNo = res.defaultShaderNo;
             /*
             if (shaderProgramNo !== undefined) {
                 this.shaderNo = shaderProgramNo;
@@ -50,17 +54,22 @@ export class _material {
         }
     };
     apply = () => {
-        res.shaderApply(this.shaderNo);
+        let shd;
+        if (res.shaderApply(this.shaderNo)) {
+            shd = this.shaderNo;
+        } else {
+            shd = res.defaultShaderNo;
+        }
         for (let i = 0; i < this.numOfTextures; i++) {
             if (this.textures[i] != undefined) {
-                this.textures[i].apply(res.shds[this.shaderNo], i);
+                this.textures[i].apply(res.shds[shd], i);
             }
         }
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camLoc"), animation.cam.loc.toArray()[0], animation.cam.loc.toArray()[1], animation.cam.loc.toArray()[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camDir"), animation.cam.dir.toArray()[0], animation.cam.dir.toArray()[1], animation.cam.dir.toArray()[2]);
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Kd"), this.kd[0], this.kd[1], this.kd[2]);
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ks"), this.ks[0], this.ks[1], this.ks[2]);
-        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "camLoc"), window.animation.cam.loc.toArray()[0], window.animation.cam.loc.toArray()[1], window.animation.cam.loc.toArray()[2]);
-        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "camDir"), window.animation.cam.dir.toArray()[0], window.animation.cam.dir.toArray()[1], window.animation.cam.dir.toArray()[2]);
     };
     bindTex = (no, texture) => {
         if (no >= 0 && no < this.numOfTextures) {
@@ -82,8 +91,8 @@ export class _material {
     };
 }
 
-export function material(name, ka, kdTrans, ksPh) {
-    return new _material(name, ka, kdTrans, ksPh);
+export function material(name, ka, kdTrans, ksPh, shaderNo) {
+    return new _material(name, ka, kdTrans, ksPh, shaderNo);
 }
 
 export let defaultMaterial;

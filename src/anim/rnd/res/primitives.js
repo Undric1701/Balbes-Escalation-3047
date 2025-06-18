@@ -64,6 +64,13 @@ export class _prim {
     }
     draw(matrW) {
         this.mtl.apply();
+        let shd;
+
+        if (this.mtl.shaderNo == undefined || this.mtl.shaderNo instanceof Promise) {
+            shd = res.defaultShaderNo;
+        } else {
+            shd = this.mtl.shaderNo;
+        }
         try {
             if (this.type === undefined) {
                 throw new Error("undefined type of primitive");
@@ -80,17 +87,20 @@ export class _prim {
             let w = mth.MatrMulMatr(this.matrW, matrW);
 
             let winw = mth.MatrTranspose(mth.MatrInverse(w));
-            let wvp = mth.MatrMulMatr(w, window.animation.cam.matrVP);
+            let wvp = mth.MatrMulMatr(w, animation.cam.matrVP);
 
-            let loc1 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrWVP");
+            if (res.shds[shd].name == "samples/water")
+              gl.uniform1f(res.shds[shd].uniforms["u_time"].loc, window.animation.timer.time);
+
+            let loc1 = gl.getUniformLocation(res.shds[shd].progId, "matrWVP");
             if (loc1 != null)
                 gl.uniformMatrix4fv(loc1, false, mth.float32ArrayFromMatr(wvp));
 
-            let loc2 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrW");
+            let loc2 = gl.getUniformLocation(res.shds[shd].progId, "matrW");
             if (loc2 != null)
                 gl.uniformMatrix4fv(loc2, false, mth.float32ArrayFromMatr(w));
 
-            let loc3 = gl.getUniformLocation(res.shds[this.mtl.shaderNo].progId, "matrInv");
+            let loc3 = gl.getUniformLocation(res.shds[shd].progId, "matrInv");
             if (loc3 != null)
                 gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(winw));
 
