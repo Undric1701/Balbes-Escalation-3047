@@ -70,6 +70,7 @@ export class _prim {
             }
             if (matrW === undefined && this.matrW === undefined) {
                 matrW = mth.UnitMatrix;
+                this.matrW = mth.UnitMatrix;
             } else if (matrW === undefined) {
                 matrW = this.matrW;
             } else if (this.matrW === undefined) {

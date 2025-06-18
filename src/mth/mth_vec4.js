@@ -1,4 +1,5 @@
 /* AT7, 13.06.2025, math module: 4D vectors module */
+import * as mth from "./mth.js"
 
 export class _Vec4 {
     constructor(x, y, z, w) {
@@ -15,5 +16,8 @@ export class _Vec4 {
     }
 }
 export function Vec4(x, y, z, w) {
+    if (typeof x instanceof mth._Vec3) {
+        return new _Vec4(x.x, x.y, x.z, y);
+    }
     return new _Vec4(x, y, z, w)
 }

@@ -45,7 +45,8 @@ export async function startAnimation() {
     if (window.animation == undefined) {
         window.animation = Animation;
     }
-    await Animation.animAddUnit(new unit.Unit_Test());
+    await Animation.animAddUnit(new unit.unitCreate("test"));
+    await Animation.animAddUnit(new unit.unitCreate("water"));
     /*                                        
     let canvas = document.getElementById("webgl-canvas");
     gl = canvas.getContext("webgl2");
