@@ -109,31 +109,53 @@ export function control(event) {
 
   Dist = 0.30;
 
-  if (event.key == 'w' || event.key == 'W' || event.key == 's' || event.key == 'S') {
+  if (event.key == 'w' || event.key == 'W' || event.key == 's' || event.key == 'S' || event.key == 'a' || event.key == 'A' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
     let Dir = Vec3(0, 0, 0);
 
     if (event.key == 's' || event.key == 'S')
       Dir = mth.Vec3Neg(window.animation.cam.dir);
     if (event.key == 'w' || event.key == 'W')
       Dir = Vec3(window.animation.cam.dir);
+    if (event.key == 'a' || event.key == 'A')
+      Dir = mth.Vec3Normalize(mth.Vec3Neg(window.animation.cam.right));
+    if (event.key == 'd' || event.key == 'D')
+      Dir = mth.Vec3Normalize(window.animation.cam.right);
+    if (event.key == 'q' || event.key == 'Q')
+      Dir = mth.Vec3Neg(window.animation.cam.up);
+    if (event.key == 'e' || event.key == 'E')
+      Dir = window.animation.cam.up;
 
     if ((event.key == 's' && event.key == 'w') || (event.key == 'S' && event.key == 'W') || (event.key == 's' && event.key == 'W') || (event.key == 'S' && event.key == 'w'))
       Dir = Vec3(0, 0, 0);
+    if ((event.key == 'a' && event.key == 'd') || (event.key == 'A' && event.key == 'D') || (event.key == 'a' && event.key == 'D') || (event.key == 'A' && event.key == 'd'))
+          Dir = Vec3(0, 0, 0);
+    if ((event.key == 'q' && event.key == 'e') || (event.key == 'Q' && event.key == 'E') || (event.key == 'q' && event.key == 'E') || (event.key == 'Q' && event.key == 'e'))
+          Dir = Vec3(0, 0, 0);
 
-    window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3MulNum(Dir, 0.30)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3MulNum(Dir, 0.30));
+    window.animation.cam.loc = mth.Vec3AddVec3(window.animation.cam.loc, mth.Vec3MulNum(Dir, 0.18)), window.animation.cam.at = mth.Vec3AddVec3(window.animation.cam.at, mth.Vec3MulNum(Dir, 0.18));
     window.animation.cam.set(window.animation.cam.loc, window.animation.cam.at, window.animation.cam.up);
-  } else if (event.key == 'a' || event.key == 'A' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
+  
+  } else if (window.animation.mousePressed) {// || event.key == 'a' || event.key == 'A' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
+    /*
     if (event.key == 'a' || event.key == 'A')
       Azimuth += speed;
     if (event.key == 'd' || event.key == 'D')
       Azimuth -= speed;
+    if (window.animation.mousePressed)
+      Azimuth -= window.animation.Mdx / 3.0;
 
     if (event.key == 'e' || event.key == 'E')
       Elevator += speed;
 
     if (event.key == 'q' || event.key == 'Q')
       Elevator -= speed;
+    */
+    if (window.animation.mousePressed)
+      Azimuth -= window.animation.Mdx / 3.0;
 
+    if (window.animation.mousePressed)
+      Elevator -= window.animation.Mdy / 3.0;
+    
     if (Elevator < 0.08)
       Elevator = 0.08;
     else if (Elevator > 178.90)
