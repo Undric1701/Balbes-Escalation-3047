@@ -13,6 +13,9 @@ export class Animation {
     this.input = new input.Input();
     this.socket = socket;
     this.cam = camera();
+    this.saveX = this.saveY = -1;
+    this.Mdx = this.Mdy = this.Mx = this.My = 0;
+    this.mousePressed = false;
     this.units = [];
   }
   async finishInit() {

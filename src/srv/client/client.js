@@ -50,8 +50,30 @@ export async function startAnimation() {
     await Animation.animAddUnit(new unit.unitCreate("test"));
     await Animation.animAddUnit(new unit.unitCreate("player"));
     await Animation.animAddUnit(new unit.unitCreate("water"));
+
+    let canvas = document.getElementById("webgl-canvas");
+
+    canvas.onmousedown = (ev) => { window.animation.mousePressed = true; }
+    canvas.onmouseup = (ev) => { window.animation.mousePressed = false; }
+    canvas.onmousemove = (ev) => {
+        if (window.animation.saveX == -1 || window.animation.saveY == -1)
+        {
+            window.animation.saveX = ev.x;
+            window.animation.saveY = ev.y;
+        }
+        if (window.animation.mousePressed)
+        {
+            window.animation.Mx = ev.x;
+            window.animation.My = ev.y;
+            window.animation.Mdx = ev.x - window.animation.saveX;
+            window.animation.Mdy = ev.y - window.animation.saveY;
+            control(ev);
+        }
+        window.animation.saveX = ev.x;
+        window.animation.saveY = ev.y;
+    };
     document.addEventListener('keydown', function(event) {
-        if (event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q'|| event.key == 'e' || event.key == 'E') {
+        if (window.animation.mousePressed == true || event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q'|| event.key == 'e' || event.key == 'E') {
             control(event);
         }
     });
