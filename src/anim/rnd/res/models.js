@@ -127,17 +127,17 @@ export async function loadG3DM(filename, loadMatr) {
         //sprintf(Buf, "%s.g3dm %s Ka texture", FName, fmat -> Name);
         //Twr -> MtlBindTex(Mtls[m], 0, Twr -> TexCreateFromVec4(Buf, Vec4SetVec3(fmat -> Ka, 0)));
         //Mtls[m] -> Trans = fmat -> Trans;
-        if (mtl.txs[0] == NaN) {
+        if (isNaN(mtl.txs[0])) {
             mtls[m].bindTex(1, res.texCreateFromVec4(mth.Vec4(mtl.sh.kd.toList(), 0)));
         } else {
             mtls[m].bindTex(1, texs[mtl.txs[0]]);
         }
-        if (mtl.txs[1] == NaN) {
+        if (isNaN(mtl.txs[1])) {
             mtls[m].bindTex(3, res.texCreateFromVec4(mth.Vec4(0.2, 0.2, 0.2, 0)));
         } else {
             mtls[m].bindTex(3, texs[mtl.txs[1]]);
         }
-        if (mtl.txs[2] == NaN) {
+        if (isNaN(mtl.txs[2])) {
             mtls[m].bindTex(2, res.texCreateFromVec4(mth.Vec4(mtl.sh.ks.toArray(), mtl.sh.ph)));
         } else {
             mtls[m].bindTex(2, texs[mtl.txs[2]]);

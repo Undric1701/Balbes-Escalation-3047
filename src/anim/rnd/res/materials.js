@@ -23,8 +23,10 @@ export class _material {
             }
             if (kdTrans == undefined) {
                 this.kdTrans = mth.Vec4(0.5, 0.5, 0.5, 1);
+                this.trans = 1;
             } else {
                 this.kdTrans = kdTrans;
+                this.trans = 1;
             }
             if (ksPh == undefined) {
                 this.ksPh = mth.Vec4(0.3, 0.3, 0.3, 1);
@@ -67,6 +69,11 @@ export class _material {
         }
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camLoc"), animation.cam.loc.toArray()[0], animation.cam.loc.toArray()[1], animation.cam.loc.toArray()[2]);
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camDir"), animation.cam.dir.toArray()[0], animation.cam.dir.toArray()[1], animation.cam.dir.toArray()[2]);
+        if (this.trans != undefined) {
+            window.gl.uniform1f(window.gl.getUniformLocation(res.shds[shd].progId, "Trans"), this.trans);
+        } else {
+            window.gl.uniform1f(window.gl.getUniformLocation(res.shds[shd].progId, "Trans"), 1);
+        }
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ka"), this.ka[0], this.ka[1], this.ka[2]);
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Kd"), this.kd[0], this.kd[1], this.kd[2]);
         //window.gl.uniform3f(window.gl.getUniformLocation(res.shds[this.shaderNo].progId, "Ks"), this.ks[0], this.ks[1], this.ks[2]);

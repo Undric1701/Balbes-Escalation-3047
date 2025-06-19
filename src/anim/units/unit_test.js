@@ -7,6 +7,7 @@ export class Unit_Test {
 
     };
     async init() {
+        /*
         this.mtl = res.material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 0);//30, 1, res.defaultShaderNo, 0);
         this.mtl.bindTex(1, res.texture("./TWR_SHOT04.png", "2d"));
 
@@ -48,18 +49,19 @@ export class Unit_Test {
 
         let vertices = mth.VertexList(points, texCoords, color, normals);
 
-        this.prim = res.prim(this.mtl, window.gl.TRIANGLES, vertices, Indices);
-        this.model = await res.loadG3DM("../../../../bin/models/warship4alT.g3dm");
+        this.prim = res.prim(this.mtl, gl.TRIANGLES, vertices, Indices);
+        */
+        this.model = await res.loadG3DM("../../../../bin/models/warship4alT1.g3dm");
     }
     close = () => {
         //this.prim.draw(mth.UnitMatrix);
     }
     response = () => {
-        //console.log("Test unit response");
     };
     render = () => {
-        this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(window.animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrTranslate(mth.Vec3(2, 2, 2))));
-        this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrRotate(animation.timer.time, mth.Vec3(0, 1, 0))));
+        //this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrTranslate(mth.Vec3(2, 2, 2))));
+        this.model.draw(mth.MatrMulMatr(mth.MatrRotate(animation.timer.time, mth.Vec3(0, 1, 0)),
+            mth.MatrTranslate(mth.Vec3(Math.sin(animation.timer.time * mth.PI) * 10, -0.2, Math.cos(animation.timer.time * mth.PI) * 10))));
     }
 }
 

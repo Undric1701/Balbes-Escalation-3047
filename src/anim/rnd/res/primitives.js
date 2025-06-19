@@ -90,7 +90,7 @@ export class _prim {
             let wvp = mth.MatrMulMatr(w, animation.cam.matrVP);
 
             if (res.shds[shd].name == "samples/water")
-              gl.uniform1f(res.shds[shd].uniforms["u_time"].loc, window.animation.timer.time);
+                gl.uniform1f(res.shds[shd].uniforms["u_time"].loc, window.animation.timer.time);
 
             let loc1 = gl.getUniformLocation(res.shds[shd].progId, "matrWVP");
             if (loc1 != null)
@@ -100,9 +100,13 @@ export class _prim {
             if (loc2 != null)
                 gl.uniformMatrix4fv(loc2, false, mth.float32ArrayFromMatr(w));
 
-            let loc3 = gl.getUniformLocation(res.shds[shd].progId, "matrInv");
+            let loc3 = gl.getUniformLocation(res.shds[shd].progId, "matrVP");
             if (loc3 != null)
-                gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(winw));
+                gl.uniformMatrix4fv(loc3, false, mth.float32ArrayFromMatr(animation.cam.matrVP));
+
+            let loc4 = gl.getUniformLocation(res.shds[shd].progId, "matrInv");
+            if (loc4 != null)
+                gl.uniformMatrix4fv(loc4, false, mth.float32ArrayFromMatr(winw));
 
 
             gl.bindVertexArray(this.VA);

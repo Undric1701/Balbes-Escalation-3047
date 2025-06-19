@@ -6,7 +6,7 @@ function gridCreate(w, h, size) {
     let v = []
     for (let i = 0; i < h; i++)
         for (let j = 0; j < w; j++) {
-            let vert = mth.Vertex(mth.Vec3(j / (w - 1) * size, 0, i / (h - 1) * size),
+            let vert = mth.Vertex(mth.Vec3((2 * j / (w - 1) - 1) * size, 0, (2 * i / (h - 1) - 1) * size),
                 mth.Vec2(j / (w - 1) * size, i / (h - 1) * size),
                 mth.Vec3(0, 1, 0),
                 mth.Vec4(0.4, 0.4, 0.7, 0.7));
@@ -36,17 +36,21 @@ function gridCreate(w, h, size) {
 }
 
 export class Unit_Water {
+    /*
     constructor() {
-
     };
+    */
     async init() {
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));
+        this.mtl.trans = 0.7;
         this.mtl.shaderNo = res.getShdIdByName("samples/water");
         //this.mtl.shaderNo = await res.shdsLoad("samples/water");
-        await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
-        this.mtl.bindTex(1, res.texture("./water.jpg", "2d"));
+        //await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
+        this.mtl.bindTex(1, res.texture("../../../../bin/textures/water/water1.png", "2d"));
+        this.mtl.bindTex(4, res.texture("../../../../bin/textures/water/waterNM.bmp", "2d"));
+        this.mtl.bindTex(5, res.texture("../../../../bin/textures/water/water_dudv.bmp", "2d"));
 
-        let water_grid = gridCreate(100, 100, 50);
+        let water_grid = gridCreate(128, 128, 100);
 
         this.water = res.prim(this.mtl, gl.TRIANGLE_STRIP, water_grid[0], water_grid[1]);
     }
@@ -57,7 +61,7 @@ export class Unit_Water {
         //console.log("Test unit response");
     };
     render = () => {
-        this.water.draw();
+        this.water.draw(mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z)));
     }
 }
 

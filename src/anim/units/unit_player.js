@@ -7,7 +7,7 @@ export class Unit_Player {
         this.type = type;
     };
     async init(ev) {
-        this.model = await res.loadG3DM("../../../../bin/models/warship4alT.g3dm");
+        this.model = await res.loadG3DM("../../../../bin/models/warship4alT1.g3dm");
     }
     close() {
     }
