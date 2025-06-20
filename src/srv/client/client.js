@@ -5,6 +5,9 @@ import * as unit from "../../anim/units/unit.js"
 import { control } from "../../mth/mth_cam.js"
 
 let socket;
+
+let Animation;
+
 export async function openWebsocketCommunication() {
     socket = await io();
 
@@ -27,6 +30,24 @@ export async function openWebsocketCommunication() {
             drawChat(messages);
         });
         /*
+        socket.on("No-Animation-On-Server", async function () {
+            //startAnimation();      
+            let an = new Anim.Animation();
+            await an.finishInit();
+            socket.emit("Animation-Init-Response", an)
+        });
+        */
+        socket.on("Animation-Update", async function (unitsList) {
+            if (Animation == undefined) {
+                Animation = new Anim.Animation();
+                await Animation.finishInit();
+                clearInterval(animInitTimeInterval);
+            }
+            startAnimation()
+            await Animation.updateUnits(unitsList);
+            //window.requestAnimationFrame(Animation.animResponse);
+        });
+        /*
         socket.on("Start-Animation", () => {
             Animation = new Anim.Animation();
             window.requestAnimationFrame(Animation.animRender());
@@ -39,57 +60,26 @@ export async function openWebsocketCommunication() {
     });
 };
 
-export async function startAnimation() {
-    let Animation = new Anim.Animation(socket);
+export function requestAnimation() {
+    if (socket != undefined) {
+        socket.emit("New-Animation-Request");
+    }
+}
 
-    await Animation.finishInit();
+let animInitTimeInterval;
+
+setTimeout(() => { requestAnimation() }, 5000);
+
+//socket.emit("New-Animation-Request", socket);
+
+export async function startAnimation() {
+    //Animation = new Anim.Animation(socket);
+
+    //await Animation.finishInit();
     if (window.animation == undefined) {
         window.animation = Animation;
     }
-    
-    await Animation.animAddUnit(new unit.unitCreate("test"));
-    await Animation.animAddUnit(new unit.unitCreate("player"));
-    await Animation.animAddUnit(new unit.unitCreate("water"));
 
-    let canvas = document.getElementById("webgl-canvas");
-
-    canvas.onmousedown = (ev) => { window.animation.mousePressed = true; }
-    canvas.onmouseup = (ev) => { window.animation.mousePressed = false; }
-    canvas.onmousemove = (ev) => {
-        if (window.animation.saveX == -1 || window.animation.saveY == -1)
-        {
-            window.animation.saveX = ev.x;
-            window.animation.saveY = ev.y;
-        }
-        if (window.animation.mousePressed)
-        {
-            window.animation.Mx = ev.x;
-            window.animation.My = ev.y;
-            window.animation.Mdx = ev.x - window.animation.saveX;
-            window.animation.Mdy = ev.y - window.animation.saveY;
-            control(ev);
-        }
-        window.animation.saveX = ev.x;
-        window.animation.saveY = ev.y;
-    };
-    document.addEventListener('keydown', function(event) {
-        if (window.animation.mousePressed == true || event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q'|| event.key == 'e' || event.key == 'E') {
-            control(event);
-        }
-    });
-    /*                                        
-    let canvas = document.getElementById("webgl-canvas");
-    gl = canvas.getContext("webgl2");
-
-    gl.viewportWidth = canvas.width;
-    gl.viewportHeight = canvas.height;
-
-    gl.clearColor(0.30, 0.47, 0.8, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    Animation = new Anim.Animation();
-    ShdSys.shdsLoad(gl, "default");  
-    */
     socket.emit("messageToServer", "Started new animation");
     //socket.emit("Animation-Started", socket.id, Animation);
     window.requestAnimationFrame(Animation.animResponse);

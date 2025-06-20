@@ -1,9 +1,13 @@
 
+/* IK4, 19.06,  */
 import * as mth from "../../../mth/mth.js"
 
 class _texture {
     // possible types: 2d, cube, target
-    constructor(nameURL, textureType = "2d") {
+    constructor(nameURL, textureType) {
+        if (typeof window === 'undefined') {
+            return;
+        }
         if (typeof nameURL == "object") {
             this.name = nameURL.name;
             console.log(`Texture loading: ${this.name}`);
@@ -34,6 +38,9 @@ class _texture {
             return;
         }
         this.name = nameURL;
+        if (textureType == undefined) {
+            return;
+        }
         console.log(`Texture loading: ${this.name}`);
         this.id = gl.createTexture();
         this.textureType = textureType;
@@ -146,6 +153,9 @@ export function texture(...args) {
 } // End of 'texture' function
 
 export function createTexture(textureName, width, height, isMipmap, glType, pixelsBits) {
+    if (typeof window === 'undefined') {
+        return;
+    }
     console.log(`Create texture: ${textureName} ${width} x ${height}`);
 
     let type = gl.UNSIGNED_BYTE;
@@ -269,5 +279,5 @@ export function convertBGRAToRGBA(format, bits) {
 }
 
 export function texCreateFromVec4(vec4) {
-    return createTexture(`tex from vec4: ${vec4}`, 1, 1, false, gl.RGBA32F, vec4.toArray())
+    return createTexture(`tex vec4: (${(vec4.toArray().join(', '))})`, 1, 1, false, gl.RGBA32F, vec4.toArray())
 }

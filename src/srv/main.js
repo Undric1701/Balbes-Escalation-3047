@@ -4,6 +4,7 @@ Anim.animInit();
 let timer_id = setInterval(() => { Anim.animRender }, 0);
 */
 
+/*
 const MongoClient = require("mongodb");
 const http = require("http");
 const fs = require("fs").promises;
@@ -13,6 +14,20 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
 //const { useReducer } = require("react");
+*/
+
+import * as MongoClient from "mongodb";
+import * as http from "http";
+import * as fs from "fs/promises";
+import express from "express";
+import logger from "morgan";
+import * as cookieParser from "cookie-parser";
+import { Server } from "socket.io";
+
+const __dirname = import.meta.dirname;
+
+import * as Anim from "../anim/anim.js";
+import { clearInterval } from "timers";
 
 const app = express();
 const port = 8002;
@@ -47,16 +62,35 @@ app.use(express.static("."));
 const server = http.createServer(app);
 const io = new Server(server);
 
-let clients = []
+let players = [];
+let Animation = new Anim.Animation();
+let unitsList = [];
+let animInitTimeInterval;
+
+initServer();
+
+function addToUnitList(id, name, params) {
+    unitsList.push({ id: id, name: name, params: params });
+}
+
+async function initServer() {
+    //await Animation.animAddUnit("Skybox");
+    await Animation.animAddUnit("water");
+    addToUnitList("water", "water", 0);
+    await Animation.animAddUnit("test");
+    addToUnitList("test", "test", 0);
+    initDatabase();
+}
+
 
 io.on("connection", (socket) => {
-    clients.push(socket);
-    console.log(`Client connected with id: ${socket.id}`);
+    players.push(socket);
+    console.log(`Player connected with id: ${socket.id}`);
 
     socket.on("messageToServer", (msg) => {
         console.log(msg);
 
-        for (let client of clients) {
+        for (let client of players) {
             client.emit("messageFromServer", `Message from client ${socket.id} was ${msg}`);
         }
     });
@@ -68,9 +102,10 @@ io.on("connection", (socket) => {
     });
     socket.on("disconnect", () => {
         console.log(`Client disconnected with id: ${socket.id}`);
-        const index = clients.indexOf(socket);
+        const index = players.indexOf(socket);
         if (index > -1) {
-            clients.splice(index, 1);
+            players.splice(index, 1);
+            ///!!!!!!!!!!!!!!!11 add player unit clear
         }
     });
     socket.on("Messages-Request", async function () {
@@ -84,6 +119,29 @@ io.on("connection", (socket) => {
         console.log(`Client:${id} started new animation`);
     });
 
+    socket.on("New-Animation-Request", function () {
+        addToUnitList("player", [`player#${players.length}`, socket.id]);
+        Animation.updateUnits(unitsList);
+        socket.emit("Animation-Update", unitsList);
+    });
+
+    //socket.on("Animation-Update", function (unitsList) )
+    /*
+    socket.on("Animation-Init-Response", async function (client_anim) {
+        Animation = client_anim;
+        Animation = new Anim.Animation();
+        clearInterval(animInitTimeInterval);
+        await initServer();
+    });
+    if (Animation == undefined) {
+        animInitTimeInterval = setInterval(() => { socket.emit("No-Animation-On-Server") }, 1000);
+    } else {
+        Animation.animAddUnit("Player", socket);
+        for (let i = 0; i < players.length; i++)
+            socket.to(players[i].id).emit("Animation-From-Server", Animation);
+    }
+    /*              
+    */
 });
 
 app.get("/", (req, res) => {
@@ -131,11 +189,9 @@ app.get("/game/index.html", (req, res) => {
         })
     .catch (err) {
         res.setHeader()
-
     }
 });
 */
-
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
@@ -207,4 +263,4 @@ async function srvAddMessage(message, user, date) {
     }
 }
 
-initDatabase();
+//initServer();

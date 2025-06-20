@@ -7,6 +7,9 @@ export class _material {
     //constructor(name, ka, kd, ks, ph, trans, shaderProgramNo, texCount) {
     constructor(name, ka, kdTrans, ksPh, shaderNo) {
         try {
+            if (typeof window === 'undefined') {
+                return;
+            }
             if (typeof name == "string") {
                 this.name = name;
             } else {
@@ -25,7 +28,7 @@ export class _material {
                 this.kdTrans = mth.Vec4(0.5, 0.5, 0.5, 1);
                 this.trans = 1;
             } else {
-                this.kdTrans = kdTrans;
+                this.kdTrans = mth.Vec4(kdTrans);
                 this.trans = 1;
             }
             if (ksPh == undefined) {

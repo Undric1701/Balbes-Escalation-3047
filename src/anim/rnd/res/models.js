@@ -2,17 +2,27 @@
 import * as mth from "../../../mth/mth.js"
 import * as res from "./res.js"
 
+let fs;
+
+if (typeof window === 'undefined') {
+    fs = await import("fs");
+}
+
+
+const __dirname = import.meta.dirname;
+
+
 class _model {
     constructor() {
         this.numOfPrims = 0;
         this.prims = [];
         this.minBB = mth.Vec3(0, 0, 0);
         this.maxBB = mth.Vec3(0, 0, 0);
-        this.trans = mth.UnitMatrix;
+        this.trans = mth.matr();
     };
     primAdd = (pr, trans) => {
         if (trans == undefined) {
-            trans = mth.UnitMatrix;
+            trans = mth.matr();
         }
         this.prims[this.numOfPrims++] = { prim: pr, trans: trans };
         this.evalBB();
@@ -22,7 +32,7 @@ class _model {
     }
     draw = (matrW) => {
         if (matrW == undefined) {
-            matrW = mth.UnitMatrix;
+            matrW = mth.matr();
         }
         let m = mth.MatrMulMatr(this.trans, matrW);
 
@@ -37,17 +47,30 @@ export function model() {
     return mdl;
 }
 
+let modelsList = []
+
 export async function loadG3DM(filename, loadMatr) {
-    let response = await fetch(filename);
-    let dataBuffer = await response.arrayBuffer();
+    let response;
+    let dataBuffer;
+    if (typeof window === 'undefined') {
+        response = fs.readFileSync(__dirname.slice(0, __dirname.length - 17) + "/bin/models/" + filename);
+        dataBuffer = response;
+    } else {
+        response = await fetch("../../../../bin/models/" + filename);
+        dataBuffer = await response.arrayBuffer();
+    }
     let buffer = new Uint8Array(dataBuffer);
     let curpos = 0;
 
     if (loadMatr == undefined) {
-        loadMatr = mth.UnitMatrix;
+        loadMatr = mth.matr();
     }
     let loadMatrInv = mth.MatrTranspose(mth.MatrInverse(loadMatr));
 
+    if (modelsList[filename] != null && modelsList[filename] != undefined) {
+        //let loadedModel = structuredClone(modelsList[filename]);
+        return modelsList[filename];
+    }
 
     const sign = (buffer.slice(curpos, curpos += 4)).reduce((res_str, ch) => res_str += String.fromCharCode(ch), "");
     if (sign != "G3DM") {
@@ -144,20 +167,34 @@ export async function loadG3DM(filename, loadMatr) {
         }
     }
     curpos = prim_pos;
+    let model_for_list = model();
     for (let i = 0; i < numOfPrims; i++) {
         let [numOfVertices, numOfFacetIndices, mtlNo] = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * 3));
         let v = new Float32Array(dataBuffer.slice(curpos, curpos += 4 * 12 * numOfVertices));
-        v = mth.vertexListFromData(v);
-
-        if (loadMatr != mth.UnitMatrix) {
-            for (let i = 0; i < v.length; i++) {
-                v.pos = mth.PointTransform(v.pos, loadMatr);
-                v.normal = mth.VectorTransform(v.normal, loadMatrInv);
-            }
-        }
         let ind = new Uint32Array(dataBuffer.slice(curpos, curpos += 4 * numOfFacetIndices));
 
-        mdl.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLES, v, ind), loadMatr);
+        v = mth.vertexListFromData(v);
+        let v1 = mth.copyVertices(v);
+        /*
+        for (let j = 0; j < v.length; j++) {
+            v1[i] = structuredClone(v[i]);
+        }
+            */
+        if (typeof window === 'undefined') {
+            model_for_list.primAdd(res.prim(mtls[mtlNo], null, v1, ind), mth.matr());
+        } else {
+            model_for_list.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLES, v1, ind), mth.matr());
+        }
+        for (let i = 0; i < v.length; i++) {
+            v[i].pos = mth.PointTransform(v[i].pos, loadMatr);
+            v[i].normal = mth.VectorTransform(v[i].normal, loadMatrInv);
+        }
+        if (typeof window === 'undefined') {
+            mdl.primAdd(res.prim(mtls[mtlNo], null, v, ind), loadMatr);
+        } else {
+            mdl.primAdd(res.prim(mtls[mtlNo], gl.TRIANGLES, v, ind), loadMatr);
+        }
     }
+    modelsList[filename] = model_for_list;
     return mdl;
 }              

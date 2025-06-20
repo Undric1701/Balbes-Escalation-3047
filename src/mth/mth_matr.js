@@ -5,7 +5,7 @@ import { degrees2Radian } from "./mth.js"
 import * as Vec3s from "./mth_vec3.js"
 
 
-export class Matr {
+export class _matr {
     constructor(A00, A01, A02, A03,
         A10, A11, A12, A13,
         A20, A21, A22, A23,
@@ -26,67 +26,72 @@ export class Matr {
         }
     };
 }
+
+export function matr(A00, A01, A02, A03, A10, A11, A12, A13, A20, A21, A22, A23, A30, A31, A32, A33) {
+    return new _matr(A00, A01, A02, A03, A10, A11, A12, A13, A20, A21, A22, A23, A30, A31, A32, A33);
+}
+
 export function MatrTranslate(t) {
-    return new Matr(1, 0, 0, 0,
+    return matr(1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         t.x, t.y, t.z, 1);
 }
 export function MatrScale(S) {
-    return new Matr(S.x, 0, 0, 0,
+    return matr(S.x, 0, 0, 0,
         0, S.y, 0, 0,
         0, 0, S.z, 0,
         0, 0, 0, 1);
 }
 
 export function MatrRotateZ(AngleInDegree) {
-  let m = new Matr();
-  let a = degrees2Radian(AngleInDegree);
-  let co = Math.cos(a),
-    si = Math.sin(a);
+    let m = new matr();
+    let a = degrees2Radian(AngleInDegree);
+    let co = Math.cos(a),
+        si = Math.sin(a);
 
-  m.a =
-  [    
-      [co, si, 0, 0],
-      [-si, co, 0, 0],
-      [0, 0, 1, 0],
-      [0, 0, 0, 1],
-  ];
-  
-  return m;
+    m.a =
+        [
+            [co, si, 0, 0],
+            [-si, co, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ];
+
+    return m;
 }
 
 export function MatrRotateY(AngleInDegree) {
-  let m = new Matr();
-  let a = degrees2Radian(AngleInDegree);
-  let co = Math.cos(a),
-    si = Math.sin(a);
+    let m = matr();
+    let a = degrees2Radian(AngleInDegree);
+    let co = Math.cos(a),
+        si = Math.sin(a);
 
-  m.a =
-  [    
-      [co, 0, -si, 0],
-      [0, 1, 0, 0],
-      [si, 0, co, 0],
-      [0, 0, 0, 1],
-  ];
-  return m;
+    m.a =
+        [
+            [co, 0, -si, 0],
+            [0, 1, 0, 0],
+            [si, 0, co, 0],
+            [0, 0, 0, 1],
+        ];
+    return m;
 }
 
 export function MatrRotateX(AngleInDegree) {
-  let m = new Matr();
-  let a = degrees2Radian(AngleInDegree);
-  let co = Math.cos(a),
-    si = Math.sin(a);
+    let m = matr();
+    let a = degrees2Radian(AngleInDegree);
+    let co = Math.cos(a),
+        si = Math.sin(a);
 
-  m.a =
-  [    
-      [1, 0, 0, 0],
-      [0, co, si, 0],
-      [0, -si, co, 0],
-      [0, 0, 0, 1],
-  ];
+    m.a =
+        [
+            [1, 0, 0, 0],
+            [0, co, si, 0],
+            [0, -si, co, 0],
+            [0, 0, 0, 1],
+        ];
 
-  return m;
+    return m;
 }
 
 export function MatrRotate(AngleInDegree, R) {
@@ -103,7 +108,7 @@ export function MatrRotate(AngleInDegree, R) {
     let len = x * x + y * y + z * z;
     if (len != 0 && len != 1)
         (len = Math.sqrt(len)), (x /= len), (y /= len), (z /= len);
-    let m = new Matr();
+    let m = matr();
     m.a[0][0] = cosine + x * x * (1 - cosine);
     m.a[0][1] = x * y * (1 - cosine) + z * sine;
     m.a[0][2] = x * z * (1 - cosine) - y * sine;
@@ -123,7 +128,7 @@ export function MatrRotate(AngleInDegree, R) {
     return m;
 }
 export function MatrTranspose(m) {
-    return new Matr(m.a[0][0], m.a[1][0], m.a[2][0], m.a[3][0],
+    return matr(m.a[0][0], m.a[1][0], m.a[2][0], m.a[3][0],
         m.a[0][1], m.a[1][1], m.a[2][1], m.a[3][1],
         m.a[0][2], m.a[1][2], m.a[2][2], m.a[3][2],
         m.a[0][3], m.a[1][3], m.a[2][3], m.a[3][3]);
@@ -150,7 +155,7 @@ export function MatrDeterm(m) {
 }
 export function MatrInverse(m) {
     let det = MatrDeterm(m);
-    let r = new Matr(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    let r = matr(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     if (det == 0) {
         r.a = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
@@ -226,9 +231,9 @@ export function MatrInverse(m) {
             m.a[2][0], m.a[2][1], m.a[2][2]) / det;
     return r;
 }
-export let UnitMatrix = new Matr(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
 export function MatrMulMatr(M1, M2) {
-    let r = new Matr(
+    let r = matr(
         M1.a[0][0] * M2.a[0][0] + M1.a[0][1] * M2.a[1][0] + M1.a[0][2] * M2.a[2][0] + M1.a[0][3] * M2.a[3][0],
         M1.a[0][0] * M2.a[0][1] + M1.a[0][1] * M2.a[1][1] + M1.a[0][2] * M2.a[2][1] + M1.a[0][3] * M2.a[3][1],
         M1.a[0][0] * M2.a[0][2] + M1.a[0][1] * M2.a[1][2] + M1.a[0][2] * M2.a[2][2] + M1.a[0][3] * M2.a[3][2],
@@ -255,14 +260,14 @@ export function MatrView(Loc, At, Up1) {
     let Right = Vec3s.Vec3Normalize(Vec3s.Vec3CrossVec3(Dir, Up1));
     let Up = Vec3s.Vec3Normalize(Vec3s.Vec3CrossVec3(Right, Dir));
 
-    let m = new Matr(Right.x, Up.x, -Dir.x, 0,
+    let m = matr(Right.x, Up.x, -Dir.x, 0,
         Right.y, Up.y, -Dir.y, 0,
         Right.z, Up.z, -Dir.z, 0,
         -Vec3s.Vec3DotVec3(Loc, Right), -Vec3s.Vec3DotVec3(Loc, Up), Vec3s.Vec3DotVec3(Loc, Dir), 1);
     return m;
 }
 export function MatrFrustum(l, r, b, t, n, f) {
-    let m = new Matr(2 * n / (r - l), 0, 0, 0,
+    let m = matr(2 * n / (r - l), 0, 0, 0,
         0, 2 * n / (t - b), 0, 0,
         (r + l) / (r - l), (t + b) / (t - b), -(f + n) / (f - n), -1,
         0, 0, - 2 * n * f / (f - n), 0);
@@ -272,8 +277,4 @@ export function MatrFrustum(l, r, b, t, n, f) {
 export function float32ArrayFromMatr(matr) {
     //return new Float32Array(matr.a[0].concat(matr.a[1].concat(matr.a[2].concat(matr.a[3]))), 0, 16);
     return new Float32Array(matr.a[0].concat(matr.a[1], matr.a[2], matr.a[3]));
-}
-
-export function matr(...args) {
-    return new Matr(...args);
 }

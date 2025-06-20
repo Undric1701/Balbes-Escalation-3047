@@ -30,6 +30,7 @@ export class Render {
     renderResize = (w, h) => {
         this.w = w;
         this.h = h;
+        animation.cam.setSize(w, h);
     }
 }
 export async function renderInit(render) {

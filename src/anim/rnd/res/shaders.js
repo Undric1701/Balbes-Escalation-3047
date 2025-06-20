@@ -61,6 +61,9 @@ export function shdApply(shd) {
 }
 
 export async function shdsLoad(fileNamePrefix) {
+  if (typeof window === 'undefined') {
+    return;
+  }
   console.log(`Shaders: ../../../../bin/shaders/${fileNamePrefix}/`);
   await Promise.all([tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/vert.glsl`), tryLoadShaderAsync(`../../../../bin/shaders/${fileNamePrefix}/frag.glsl`)]).then((results) => {
     const vertexSh = loadShader(gl.VERTEX_SHADER, results[0]);
@@ -116,6 +119,9 @@ export let matrWLocation,
   matrVPLocation;
 
 export function getShdIdByName(name) {
+  if (typeof window === 'undefined') {
+    return;
+  }
   for (let i = 0; i < shds.length; i++) {
     if (shds[i].name == name)
       return i;
@@ -126,6 +132,9 @@ export function getShdIdByName(name) {
 export async function shadersInit() {
   shds = [];
   numOfShds = 0;
+  if (typeof window === 'undefined') {
+    return;
+  }
   await shdsLoad("default");
   await shdsLoad("samples/water");
   matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");

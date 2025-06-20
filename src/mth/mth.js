@@ -13,11 +13,11 @@ export * from "./mth_cam.js"
 export let PI = 3.14159265358979323846;
 
 export function degrees2Radian(A) {
-  return (A * Math.PI) / 180.0;
+    return (A * Math.PI) / 180.0;
 }
 
 export function radian2Degrees(A) {
-  return (A * 180.0) / Math.PI;
+    return (A * 180.0) / Math.PI;
 }
 
 
@@ -87,4 +87,12 @@ export function vertexListFromData(data) {
         vertArr[i] = vertexFromData(data.slice(i * 12, i * 12 + 12));
     }
     return vertArr;
+}
+
+export function copyVertices(src) {
+    let arr = []
+    for (let i = 0; i < src.length; i++) {
+        arr[i] = Vertex(Vec3(src[i].pos.toArray()), Vec2(src[i].texCoord.toArray()), Vec3(src[i].normal.toArray()), Vec4(src[i].color.toArray()));
+    }
+    return arr;
 }

@@ -3,13 +3,13 @@ import * as mth from "./mth.js"
 
 export class _Vec4 {
     constructor(x, y, z, w) {
-        if (x == undefined){ 
+        if (x == undefined) {
             this.x = 0;
             this.y = 0;
             this.z = 0;
             this.w = 0;
         } else if (typeof x == "object") {
-            if (x.length == 3) { 
+            if (x.length == 4) {
                 this.x = x[0];
                 this.y = x[1];
                 this.z = x[2];
@@ -25,7 +25,7 @@ export class _Vec4 {
             this.y = x;
             this.z = x;
             this.w = x;
-        } else { 
+        } else {
             this.x = x;
             this.y = y;
             this.z = z;

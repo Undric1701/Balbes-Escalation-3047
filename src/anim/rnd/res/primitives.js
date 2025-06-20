@@ -7,6 +7,11 @@ export class _prim {
         let i;
         this.type = type;
 
+        if (typeof window === 'undefined') {
+            this.evalBB(vertArr);
+            return;
+        }
+
         //gl.GenVertexArrays(1, &Pr->VA);
         this.VA = gl.createVertexArray();
         /* Vertex data */
@@ -29,7 +34,6 @@ export class _prim {
             gl.enableVertexAttribArray(3);
             gl.vertexAttribPointer(3, 4, gl.FLOAT, false, 48, 32);
             //gl.bindVertexArray(0);
-            //Twr->PrimEvalBB(&Pr->MinBB, &Pr->MaxBB, vertArr, NoofV, Mtl->MtlPat);
         }
         /* Index data */
         if (indArr !== undefined && indArr.length > 0) {
@@ -51,6 +55,25 @@ export class _prim {
         }
 
         this.mtl = mtl;
+    }
+    evalBB = (vertArr) => {
+        this.minBB = mth.Vec3(0);
+        this.maxBB = mth.Vec3(0);
+
+        for (let i = 0; i < vertArr.length; i++) {
+            if (vertArr[i].pos.x < this.minBB.x)
+                this.minBB.x = vertArr[i].pos.x;
+            if (vertArr[i].pos.y < this.minBB.y)
+                this.minBB.y = vertArr[i].pos.y;
+            if (vertArr[i].pos.z < this.minBB.z)
+                this.minBB.z = vertArr[i].pos.z;
+            if (vertArr[i].pos.x > this.maxBB.x)
+                this.maxBB.x = vertArr[i].pos.x;
+            if (vertArr[i].pos.y > this.maxBB.y)
+                this.maxBB.y = vertArr[i].pos.y;
+            if (vertArr[i].pos.z > this.maxBB.z)
+                this.maxBB.z = vertArr[i].pos.z;
+        }
     }
     free = () => {
         gl.bindVertexArray(this.VA);
@@ -76,12 +99,12 @@ export class _prim {
                 throw new Error("undefined type of primitive");
             }
             if (matrW === undefined && this.matrW === undefined) {
-                matrW = mth.UnitMatrix;
-                this.matrW = mth.UnitMatrix;
+                matrW = mth.matr();
+                this.matrW = mth.matr();
             } else if (matrW === undefined) {
                 matrW = this.matrW;
             } else if (this.matrW === undefined) {
-                this.matrW = mth.UnitMatrix;
+                this.matrW = mth.matr();
             }
 
             let w = mth.MatrMulMatr(this.matrW, matrW);

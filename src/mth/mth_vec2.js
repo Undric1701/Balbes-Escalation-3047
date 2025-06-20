@@ -2,11 +2,11 @@
 
 export class _Vec2 {
     constructor(x, y) {
-        if (x == undefined){ 
+        if (x == undefined) {
             this.x = 0;
             this.y = 0;
         } else if (typeof x == "object") {
-            if (x.length == 3) { 
+            if (x.length == 2) {
                 this.x = x[0];
                 this.y = x[1];
             } else {
@@ -16,7 +16,7 @@ export class _Vec2 {
         } else if (y == undefined) {
             this.x = x;
             this.y = x;
-        } else { 
+        } else {
             this.x = x;
             this.y = y;
         }

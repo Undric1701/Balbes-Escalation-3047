@@ -5,17 +5,24 @@ export class Unit_Player {
     constructor(com, type) {
         this.com = com;
         this.type = type;
+        this.pos = mth.Vec3(10, 0, 10);
+        this.pos = mth.Vec3(Math.random() * 30);
+        this.velocity = mth.Vec3(0, 0, 0);
+        this.rotate = 0;          /* In degrees */
     };
-    async init(ev) {
-        this.model = await res.loadG3DM("../../../../bin/models/warship4alT1.g3dm");
+    async init(params) {
+        this.model = await res.loadG3DM("warship4al.g3dm");
     }
     close() {
     }
     response = () => {
+
     };
     render(ev) {
-        this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrTranslate(mth.Vec3(-18, 3.47, 8))));
+        if (this.model != undefined)
+            this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrTranslate(this.pos)));
     }
+    update = () => { }
 }
 
 export function unitCreate(com, type) {

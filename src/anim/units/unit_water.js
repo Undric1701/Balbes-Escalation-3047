@@ -2,6 +2,10 @@
 import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 
+if (typeof window === 'undefined') {
+    let gl = null;
+}
+
 function gridCreate(w, h, size) {
     let v = []
     for (let i = 0; i < h; i++)
@@ -40,29 +44,34 @@ export class Unit_Water {
     constructor() {
     };
     */
-    async init() {
+    async init(params) {
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));
         this.mtl.trans = 0.7;
         this.mtl.shaderNo = res.getShdIdByName("samples/water");
         //this.mtl.shaderNo = await res.shdsLoad("samples/water");
         //await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
         this.mtl.bindTex(1, res.texture("../../../../bin/textures/water/water1.png", "2d"));
-        this.mtl.bindTex(4, res.texture("../../../../bin/textures/water/waterNM.bmp", "2d"));
+        this.mtl.bindTex(4, res.texture("../../../../bin/textures/water/water_NM.bmp", "2d"));
         this.mtl.bindTex(5, res.texture("../../../../bin/textures/water/water_dudv.bmp", "2d"));
 
         let water_grid = gridCreate(128, 128, 100);
 
-        this.water = res.prim(this.mtl, gl.TRIANGLE_STRIP, water_grid[0], water_grid[1]);
+        if (typeof window === 'undefined') {
+            this.water = res.prim(this.mtl, null, water_grid[0], water_grid[1]);;
+        } else {
+            this.water = res.prim(this.mtl, gl.TRIANGLE_STRIP, water_grid[0], water_grid[1]);
+        }
     }
     close = () => {
-        //this.prim.draw(mth.UnitMatrix);
+        //this.prim.draw(mth.Matr());
     }
     response = () => {
         //console.log("Test unit response");
     };
     render = () => {
-        this.water.draw(mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z)));
+        this.water.draw(/*mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z))*/);
     }
+    update = () => { }
 }
 
 export function unitCreate() {
