@@ -281,3 +281,56 @@ export function convertBGRAToRGBA(format, bits) {
 export function texCreateFromVec4(vec4) {
     return createTexture(`tex vec4: (${(vec4.toArray().join(', '))})`, 1, 1, false, gl.RGBA32F, vec4.toArray())
 }
+
+export function texCreateCubeMap(url, ext) {
+  const tex = texture(url, "cube");
+  return tex;
+  /* url.split("/").pop() || "", 1, 1, gl.TEXTURE_CUBE_MAP, gl.RGBA, true */
+
+  tex.id = gl.createTexture();
+  tex.glType = gl.TEXTURE_CUBE_MAP;
+
+  const sideInfos = [
+    { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, fileName: "/PosX." + ext },
+    { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, fileName: "/NegX." + ext },
+    { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, fileName: "/PosY." + ext },
+    { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, fileName: "/NegY." + ext },
+    { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, fileName: "/PosZ." + ext },
+    { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, fileName: "/NegZ." + ext },
+  ];
+  
+  gl.bindTexture(tex.glType, tex.id);
+  sideInfos.forEach((side) => {
+    gl.texImage2D(side.target, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 255, 0]));
+  });
+  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+
+  let is_first = true;
+  sideInfos.forEach((side) => {
+    gl.bindTexture(tex.glType, tex.id);
+    const img = new Image();
+    img.src = url + side.fileName;
+    img.onload = () => {
+      gl.bindTexture(tex.glType, tex.id);
+      if (is_first) {
+        is_first = false;
+        sideInfos.forEach((side) => {
+          gl.texImage2D(side.target, 0, gl.RGBA, img.width, img.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        });
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+      }
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.texImage2D(side.target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+    };
+  });
+  
+  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+
+  return tex;
+}

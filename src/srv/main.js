@@ -79,6 +79,9 @@ async function initServer() {
     addToUnitList("water", "water", 0);
     await Animation.animAddUnit("test");
     addToUnitList("test", "test", 0);
+    
+    await Animation.animAddUnit("skybox");
+    addToUnitList("skybox", "skybox", 0);
     initDatabase();
 }
 
