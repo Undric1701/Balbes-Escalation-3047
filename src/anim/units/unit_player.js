@@ -10,7 +10,8 @@ export class Unit_Player {
         this.velocity = mth.Vec3(0, 0, 0);
         this.rotate = 0;          /* In degrees */
     };
-    async init(params) {
+    async init(name, params) {
+        this.name = name;
         this.model = await res.loadG3DM("warship4al.g3dm");
     }
     close() {

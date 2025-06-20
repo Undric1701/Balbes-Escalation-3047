@@ -44,7 +44,8 @@ export class Unit_Water {
     constructor() {
     };
     */
-    async init(params) {
+    async init(name, params) {
+        this.name = name;
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));
         this.mtl.trans = 0.7;
         this.mtl.shaderNo = res.getShdIdByName("samples/water");
