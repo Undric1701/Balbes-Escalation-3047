@@ -6,7 +6,8 @@ export class Unit_Test {
     constructor() {
 
     };
-    async init(params) {
+    async init(name, params) {
+        this.name = name;
         /*
         this.mtl = res.material("Test material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2), 0);//30, 1, res.defaultShaderNo, 0);
         this.mtl.bindTex(1, res.texture("./TWR_SHOT04.png", "2d"));
