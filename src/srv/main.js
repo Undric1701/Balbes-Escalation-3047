@@ -28,6 +28,7 @@ const __dirname = import.meta.dirname;
 
 import * as Anim from "../anim/anim.js";
 import { clearInterval } from "timers";
+import * as mth from "../mth/mth.js";
 
 const app = express();
 const port = 8002;
@@ -75,10 +76,13 @@ function addToUnitList(id, name, params) {
 
 async function initServer() {
     //await Animation.animAddUnit("Skybox");
-    await Animation.animAddUnit("water");
     addToUnitList("water", "water", 0);
-    await Animation.animAddUnit("test");
     addToUnitList("test", "test", 0);
+    /*
+    await Animation.animAddUnit("water");
+    await Animation.animAddUnit("test");
+    */
+    Animation.updateUnits(unitsList);
     initDatabase();
 }
 
@@ -120,7 +124,16 @@ io.on("connection", (socket) => {
     });
 
     socket.on("New-Animation-Request", function () {
-        addToUnitList("player", `player#${socket.id}`, socket.id);
+        addToUnitList(
+            "player",
+            `player#${socket.id}`,
+            {
+                id: socket.id,
+                pos: mth.Vec3(Math.random() * 30, -0.1, Math.random() * 30),
+                velocity: mth.Vec3(0),
+                acceleration: mth.Vec3(0, 1, 0),
+                team: Math.random() > 0.5 ? "Earth" : "Aliens"
+            });
         Animation.updateUnits(unitsList);
         io.emit("Animation-Update", unitsList);
     });

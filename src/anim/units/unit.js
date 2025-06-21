@@ -13,13 +13,13 @@ export class Unit {
 }
 */
 
-export function unitCreate(unit) {
+export function unitCreate(unit, name, params) {
     if (unit == "water") {
-        return water.unitCreate();
+        return water.unitCreate(name, params);
     } else if (unit == "test") {
-        return test.unitCreate()
+        return test.unitCreate(name, params);
     } else if (unit == "player") {
-        return player.unitCreate()
+        return player.unitCreate(name, params);
     }
     //return new Unit();
 }

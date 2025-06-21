@@ -61,7 +61,7 @@ export class Animation {
     this.render.renderResize(w, h);
   }
   async animAddUnit(id, unitName, params) {
-    let unit = Unit.unitCreate(id);
+    let unit = Unit.unitCreate(id, unitName, params);
     if (unit != undefined) {
       this.units.push(unit);
       await unit.init(unitName, params);
@@ -71,7 +71,7 @@ export class Animation {
     for (let i = 0; i < unitsList.length; i++) {
       let uni = this.units.find(unit => unit.name == unitsList[i].name);
       if (uni == undefined) {
-        await this.animAddUnit(unitsList[i].id, unitsList[i].name, unitsList.params);
+        await this.animAddUnit(unitsList[i].id, unitsList[i].name, unitsList[i].params);
       } else {
         await uni.update(unitsList[i].params)
       }

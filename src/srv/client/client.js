@@ -5,8 +5,7 @@ import * as unit from "../../anim/units/unit.js"
 import { control } from "../../mth/mth_cam.js"
 
 let socket;
-
-let Animation;
+let animation;
 
 export async function openWebsocketCommunication() {
     socket = await io();
@@ -38,13 +37,13 @@ export async function openWebsocketCommunication() {
         });
         */
         socket.on("Animation-Update", async function (unitsList) {
-            if (Animation == undefined) {
-                Animation = new Anim.Animation();
-                await Animation.finishInit();
+            if (animation == undefined) {
+                animation = new Anim.Animation();
+                await animation.finishInit();
                 clearInterval(animInitTimeInterval);
                 startAnimation();
             }
-            await Animation.updateUnits(unitsList);
+            await animation.updateUnits(unitsList);
             //window.requestAnimationFrame(Animation.animResponse);
         });
         /*
@@ -75,14 +74,16 @@ setTimeout(() => { requestAnimation() }, 5000);
 export async function startAnimation() {
     //Animation = new Anim.Animation(socket);
 
+    animation.id = socket.id;
+
     //await Animation.finishInit();
     if (window.animation == undefined) {
-        window.animation = Animation;
+        window.animation = animation;
     }
 
     socket.emit("messageToServer", "Started new animation");
     //socket.emit("Animation-Started", socket.id, Animation);
-    window.requestAnimationFrame(Animation.animResponse);
+    window.requestAnimationFrame(animation.animResponse);
 }
 
 /*

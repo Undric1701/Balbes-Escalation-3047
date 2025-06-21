@@ -52,10 +52,10 @@ export class Unit_Water {
         //this.mtl.shaderNo = await res.shdsLoad("samples/water");
         //await res.shdsLoad("samples/water").then((result) => { this.mtl.shaderNo = result });
         this.mtl.bindTex(1, res.texture("../../../../bin/textures/water/water1.png", "2d"));
-        this.mtl.bindTex(4, res.texture("../../../../bin/textures/water/water_NM.bmp", "2d"));
-        this.mtl.bindTex(5, res.texture("../../../../bin/textures/water/water_dudv.bmp", "2d"));
+        //this.mtl.bindTex(4, res.texture("../../../../bin/textures/water/water_NM.bmp", "2d"));
+        //this.mtl.bindTex(5, res.texture("../../../../bin/textures/water/water_dudv.bmp", "2d"));
 
-        let water_grid = gridCreate(128, 128, 100);
+        let water_grid = gridCreate(128, 128, 256);
 
         if (typeof window === 'undefined') {
             this.water = res.prim(this.mtl, null, water_grid[0], water_grid[1]);;
@@ -65,11 +65,12 @@ export class Unit_Water {
     }
     close = () => {
         this.water.free();
+        this.mtl.free();
     }
     response = () => {
     };
     render = () => {
-        this.water.draw(/*mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z))*/);
+        this.water.draw(mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z)));
     }
     update = () => { }
 }
