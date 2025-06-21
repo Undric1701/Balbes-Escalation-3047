@@ -42,8 +42,8 @@ export async function openWebsocketCommunication() {
                 Animation = new Anim.Animation();
                 await Animation.finishInit();
                 clearInterval(animInitTimeInterval);
+                startAnimation();
             }
-            startAnimation()
             await Animation.updateUnits(unitsList);
             //window.requestAnimationFrame(Animation.animResponse);
         });

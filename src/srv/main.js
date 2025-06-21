@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("New-Animation-Request", function () {
-        addToUnitList("player", `player#${players.length}`, socket.id);
+        addToUnitList("player", `player#${socket.id}`, socket.id);
         Animation.updateUnits(unitsList);
         io.emit("Animation-Update", unitsList);
     });
