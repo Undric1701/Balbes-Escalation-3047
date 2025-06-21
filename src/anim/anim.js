@@ -40,7 +40,7 @@ export class Animation {
   }
   animResponse = () => {
     this.timer.response();
-    //this.input.response();
+    this.input.response();
 
     for (let unit of this.units) {
       unit.response();

@@ -97,6 +97,85 @@ export function camera() {
 
 let isA = false;
 
+export function control(keys, isShift) {
+  let Dist = mth.Vec3Len(mth.Vec3SubVec3(animation.cam.at, animation.cam.loc));
+
+  let cosT = (animation.cam.loc.y - animation.cam.at.y) / Dist,
+    sinT = Math.sqrt(1 - cosT * cosT),
+    plen = Dist * sinT,
+    cosP = (animation.cam.loc.z - animation.cam.at.z) / plen,
+    sinP = (animation.cam.loc.x - animation.cam.at.x) / plen,
+    Azimuth = mth.radian2Degrees(Math.atan2(sinP, cosP)),
+    Elevator = mth.radian2Degrees(Math.atan2(sinT, cosT)),
+    koef = 0.18, shift = 1;
+
+  Dist = 0.30;
+
+  let w = keys['w'.charCodeAt(0)] || keys['W'.charCodeAt(0)];
+  let s = keys['s'.charCodeAt(0)] || keys['S'.charCodeAt(0)];
+  let a = keys['a'.charCodeAt(0)] || keys['A'.charCodeAt(0)];
+  let d = keys['d'.charCodeAt(0)] || keys['D'.charCodeAt(0)];
+  let e = keys['e'.charCodeAt(0)] || keys['E'.charCodeAt(0)];
+  let q = keys['q'.charCodeAt(0)] || keys['Q'.charCodeAt(0)];
+
+  if (isShift)
+  {
+    shift =  3.0;
+  }
+
+  if (w || s || a || d || e || q) {
+    let Dir = Vec3(0, 0, 0);
+
+    if (s)
+      Dir = mth.Vec3AddVec3(Dir, mth.Vec3Neg(animation.cam.dir));
+    if (w)
+      Dir = mth.Vec3AddVec3(Dir, Vec3(animation.cam.dir));
+    if (a)
+      Dir = mth.Vec3AddVec3(Dir, mth.Vec3Normalize(mth.Vec3Neg(animation.cam.right)));
+    if (d)
+      Dir = mth.Vec3AddVec3(Dir, mth.Vec3Normalize(animation.cam.right));
+    if (q)
+      Dir = mth.Vec3AddVec3(Dir, mth.Vec3Neg(animation.cam.up));
+    if (e)
+      Dir = mth.Vec3AddVec3(Dir, animation.cam.up);
+
+    /*
+    if (w && s)
+      Dir = Vec3(0, 0, 0);
+    if (a && d)
+      Dir = Vec3(0, 0, 0);
+    if (e && q)
+      Dir = Vec3(0, 0, 0);
+    */
+
+    animation.cam.loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(Dir, koef * shift)), animation.cam.at = mth.Vec3AddVec3(animation.cam.at, mth.Vec3MulNum(Dir, koef * shift));
+    animation.cam.set(animation.cam.loc, animation.cam.at, animation.cam.up);
+
+  } else if (animation.input.mousePressed) {
+    
+    if (animation.input.mousePressed)
+      Azimuth -= animation.input.Mdx / 3.0;
+
+    if (animation.input.mousePressed)
+      Elevator -= animation.input.Mdy / 3.0;
+
+    if (Elevator < 0.08)
+      Elevator = 0.08;
+    else if (Elevator > 178.90)
+      Elevator = 178.90;
+
+    window.animation.cam.set(mth.PointTransform(Vec3(0, Dist, 0), mth.MatrMulMatr3(mth.MatrRotateX(Elevator), mth.MatrRotateY(Azimuth), mth.MatrTranslate(animation.cam.at))),
+      animation.cam.at,
+      Vec3(0, 1, 0));
+    if (!isA) {
+      animation.cam.loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3(8, 8, 8)), animation.cam.at = mth.Vec3AddVec3(animation.cam.at, mth.Vec3(8, 8, 8));
+      animation.cam.set(animation.cam.loc, animation.cam.at, animation.cam.up);
+      isA = true;
+    }
+  }
+}
+
+/*
 export function control(event) {
   let Dist = mth.Vec3Len(mth.Vec3SubVec3(animation.cam.at, animation.cam.loc));
 
@@ -138,20 +217,7 @@ export function control(event) {
     animation.cam.set(animation.cam.loc, animation.cam.at, animation.cam.up);
 
   } else if (animation.input.mousePressed) {// || event.key == 'a' || event.key == 'A' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
-    /*
-    if (event.key == 'a' || event.key == 'A')
-      Azimuth += speed;
-    if (event.key == 'd' || event.key == 'D')
-      Azimuth -= speed;
-    if (window.animation.mousePressed)
-      Azimuth -= window.animation.Mdx / 3.0;
-
-    if (event.key == 'e' || event.key == 'E')
-      Elevator += speed;
-
-    if (event.key == 'q' || event.key == 'Q')
-      Elevator -= speed;
-    */
+    
     if (animation.input.mousePressed)
       Azimuth -= animation.input.Mdx / 3.0;
 
@@ -173,3 +239,4 @@ export function control(event) {
     }
   }
 }
+*/
