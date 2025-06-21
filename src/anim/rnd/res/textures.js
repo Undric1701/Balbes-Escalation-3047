@@ -69,12 +69,12 @@ class _texture {
             this.type = gl.TEXTURE_CUBE_MAP;
             gl.bindTexture(this.type, this.id);
             const sideInfos = [
-                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, fileName: "PosX.png" },
-                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, fileName: "NegX.png" },
-                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, fileName: "PosY.png" },
-                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, fileName: "NegY.png" },
-                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, fileName: "PosZ.png" },
-                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, fileName: "NegZ.png" },
+                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, fileName: "/PosX.png" },
+                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, fileName: "/NegX.png" },
+                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, fileName: "/PosY.png" },
+                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, fileName: "/NegY.png" },
+                { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, fileName: "/PosZ.png" },
+                { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, fileName: "/NegZ.png" },
             ];
             // Set default cube map
             gl.bindTexture(this.type, this.id);

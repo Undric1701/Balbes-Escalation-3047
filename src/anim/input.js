@@ -59,11 +59,12 @@ export class Input {
     };
 
     response() {
-        /*
-        if (animation.input.mousePressed == true || event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
-          control(event);
-        }
-        */
+       /*
+       if (animation.input.mousePressed == true || event.key == 'w' || event.key == 'W' || event.key == 'a' || event.key == 'A' || event.key == 's' || event.key == 'S' || event.key == 'd' || event.key == 'D' || event.key == 'q' || event.key == 'Q' || event.key == 'e' || event.key == 'E') {
+         control(event);
+       }
+       */
        control(animation.input.keys, animation.input.shiftKey);
+       animation.input.Mdx = animation.input.Mdy = 0;
     }
 }

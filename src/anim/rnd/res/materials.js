@@ -72,6 +72,8 @@ export class _material {
         }
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camLoc"), animation.cam.loc.toArray()[0], animation.cam.loc.toArray()[1], animation.cam.loc.toArray()[2]);
         window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camDir"), animation.cam.dir.toArray()[0], animation.cam.dir.toArray()[1], animation.cam.dir.toArray()[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camRight"), animation.cam.right.toArray()[0], animation.cam.right.toArray()[1], animation.cam.right.toArray()[2]);
+        window.gl.uniform3f(window.gl.getUniformLocation(res.shds[shd].progId, "camUp"), animation.cam.up.toArray()[0], animation.cam.up.toArray()[1], animation.cam.up.toArray()[2]);
         if (this.trans != undefined) {
             window.gl.uniform1f(window.gl.getUniformLocation(res.shds[shd].progId, "Trans"), this.trans);
         } else {
