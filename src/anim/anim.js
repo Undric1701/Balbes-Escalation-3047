@@ -76,6 +76,13 @@ export class Animation {
         await uni.update(unitsList[i].params)
       }
     }
+
+    for (let i = 0; i < this.length; i++) {
+      let uni = unitsList.find(unit => unit.name == this.units[i].name);
+      if (uni == undefined) {
+        await this.units[i].close();
+      }
+    }
   }
 }
 

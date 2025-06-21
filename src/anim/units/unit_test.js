@@ -55,7 +55,9 @@ export class Unit_Test {
         this.model = await res.loadG3DM("warship4al.g3dm");
     }
     close = () => {
-        //this.prim.draw(mth.Matr());
+        if (this.model != undefined) {
+            this.model.free();
+        }
     }
     response = () => {
     };

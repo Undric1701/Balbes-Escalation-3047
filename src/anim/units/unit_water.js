@@ -64,10 +64,9 @@ export class Unit_Water {
         }
     }
     close = () => {
-        //this.prim.draw(mth.Matr());
+        this.water.free();
     }
     response = () => {
-        //console.log("Test unit response");
     };
     render = () => {
         this.water.draw(/*mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z))*/);
