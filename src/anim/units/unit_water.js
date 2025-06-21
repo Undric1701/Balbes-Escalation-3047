@@ -70,7 +70,7 @@ export class Unit_Water {
     response = () => {
     };
     render = () => {
-        this.water.draw(mth.MatrTranslate(mth.Vec3(animation.cam.loc.x, 0, animation.cam.loc.z)));
+        this.water.draw(mth.MatrTranslate(mth.Vec3(2 * (animation.cam.loc.x >> 1), 0, 2 * (animation.cam.loc.z >> 1))));
     }
     update = () => { }
 }

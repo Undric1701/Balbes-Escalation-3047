@@ -133,7 +133,7 @@ io.on("connection", (socket) => {
                 id: socket.id,
                 pos: mth.Vec3(Math.random() * 30, -0.1, Math.random() * 30),
                 velocity: mth.Vec3(0),
-                acceleration: mth.Vec3(0, 1, 0),
+                acceleration: mth.Vec3(0, 0, 0),
                 team: Math.random() > 0.5 ? "Earth" : "Aliens"
             });
         Animation.updateUnits(unitsList);

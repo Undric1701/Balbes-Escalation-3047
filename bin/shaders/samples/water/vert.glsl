@@ -20,15 +20,15 @@ out vec3 drawWPos;
 void main() {               
     vec3 pos = (matrW * vec4(inPosition, 1)).xyz;
 
-    pos.y += 0.06 * sin(pos.x * 3.0 - pos.z * 3.0 + u_time * 4.7);
-    pos.y += 0.03 * cos(-pos.x * 5.2 + pos.z * 5.2 + u_time * 6.3);
+    pos.y += 0.2 * sin(pos.x * 3.0 - pos.z * 3.0 + u_time * 3.0);
+    pos.y += 0.05 * cos(-pos.x * 5.2 + pos.z * 5.2 + u_time * 4.7);
 
     pos.xz += 0.03 * vec2(sin(inPosition.x + 4.7 * u_time), cos(inPosition.z - 3.0 * u_time));
     gl_Position = matrVP * vec4(pos, 1);
     drawColor = inColor;
     drawNormal = normalize(mat3(matrInv) * inNormal);
-    drawWPos = (matrW * vec4(inPosition, 1)).xyz; 
-    drawTC = inTexCoord;
+    drawWPos = pos; 
+    drawTC = drawWPos.xz;
     drawColor = vec4(0.5, 0.7, 0.8, 1);
     //drawColor = vec4(normalize(drawTC), 1, 1);
     //drawColor = vec4(normalize(drawWPos), 1);

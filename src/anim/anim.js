@@ -73,7 +73,7 @@ export class Animation {
       if (uni == undefined) {
         await this.animAddUnit(unitsList[i].id, unitsList[i].name, unitsList[i].params);
       } else {
-        await uni.update(unitsList[i].params)
+        await uni.update(unitsList[i].params);
       }
     }
 

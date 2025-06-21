@@ -47,7 +47,7 @@ void main() {
     //o_color = vec4(drawNormal, 1); 
     //o_color  = vec4(texture(Texture1, drawTC).rgb, 1);
                           
-    o_color = vec4(Shade(drawWPos, N, kd.rgb, ks.rgb, ks.a, vec3(-1.0), vec3(1.0)), kd.a * Trans);
+    o_color = vec4(Shade(drawWPos, N, kd.rgb, ks.rgb, ks.a, vec3(-1.0), vec3(1.0)), 1);
     //o_color = vec4(0.5, 0.7, 0.7, 1);
     //o_color = vec4(drawNormal, 1);
     //o_color = vec4(drawTC, 0, 1);
