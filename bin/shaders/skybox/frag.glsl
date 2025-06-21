@@ -36,22 +36,42 @@ vec3 Shade( vec3 P, vec3 N, vec3 Kd, vec3 Ks, float Ph, vec3 LDir, vec3 LColor )
 }   
 
 void main() {         
-    vec3 V = normalize(drawWPos - camLoc);
-    vec3 N = -faceforward(drawNormal, V, drawNormal);
-    vec4 ka = texture(Texture0, drawTC),
-         kd = texture(Texture1, drawTC),
-         ks = texture(Texture2, drawTC);
-    float nl = max(0.1, dot(N, -camDir));
-    o_color = vec4(drawColor.rgb * nl, drawColor.a); 
-    //o_color = vec4(N, 1);  
-    //o_color = vec4(drawNormal, 1); 
-    //o_color  = vec4(texture(Texture1, drawTC).rgb, 1);
-                          
-    o_color = vec4(Shade(drawWPos, N, kd.rgb, ks.rgb, ks.a, vec3(-1.0), vec3(1.0)), kd.a * Trans);
-    //o_color = vec4(0.5, 0.7, 0.7, 1);
-    //o_color = vec4(drawNormal, 1);
-    //o_color = vec4(drawTC, 0, 1);
-    
-    //o_color += tex_color.rgb;
-    //o_color = vec4(normalize(drawWPos), 1);
+    o_color = vec4(1, 1, 1, 1);
 }
+
+/*layout(location = 0) out vec4 OutColor;
+
+in vec3 DrawPos;
+in vec2 DrawTexCoord;
+in vec3 DrawNormal;
+in vec4 DrawColor;
+*/
+/*uniform float ProjSize, ProjDist;
+uniform float FrameW, FrameH;
+
+uniform vec3 CamDir, CamUp, CamRight, CamLoc, CamAt;
+
+uniform sampler2D Tex0;
+uniform bool IsTexture0;
+
+uniform samplerCube Tex;
+
+void main( void )
+{
+  float Wp, Hp;
+  
+  Wp = Hp = ProjSize;
+  if (FrameW > FrameH)
+    Wp *= FrameW / FrameH;
+  else
+    Hp *= FrameH / FrameW;
+ 
+  float
+    xp = gl_FragCoord.x * Wp / FrameW - Wp / 2.0,
+    yp = gl_FragCoord.y * Hp / FrameH - Hp / 2.0;
+ 
+  vec3 D = normalize(CamDir * ProjDist + CamRight * xp + CamUp * yp);
+  
+  OutColor = texture(Tex, D);
+}
+*/

@@ -8,7 +8,7 @@ export class Unit_Test {
     };
     async init(name, params) {
         this.name = name;
-        this.model = await res.loadG3DM("warshipAliens  T.g3dm");
+        this.model = await res.loadG3DM("warshipAliensT.g3dm");
     }
     close = () => {
         if (this.model != undefined) {

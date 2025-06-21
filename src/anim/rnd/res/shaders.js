@@ -137,5 +137,6 @@ export async function shadersInit() {
   }
   await shdsLoad("default");
   await shdsLoad("samples/water");
+  await shdsLoad("skybox");
   matrWLocation = gl.getUniformLocation(shds[0].progId, "MatrW");
 }

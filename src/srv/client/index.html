@@ -25,6 +25,26 @@
         flex-grow: 1;
         min-height: 500px;
       }
+      .Aliens {
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        border: none;
+        border-radius: 47px;
+        padding: 12px 47px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 4, 255, 0.47);
+      }
+      .Earthlings {
+        background-color: rgba(0, 132, 255, 0.8);
+        color: white;
+        border: none;
+        border-radius: 47px;
+        padding: 12px 47px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(45, 48, 255, 0.555);
+      }
       .ocean-button {
         position: absolute;
         background-color: rgba(47, 102, 247, 0.8);
@@ -38,6 +58,24 @@
         cursor: pointer;
         user-select: none;
         box-shadow: 0 4px 12px rgba(47, 102, 247, 0.47);
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        transition: background-color 0.3s ease;
+        z-index: 5;
+      }
+      .ocean-button-notactive {
+        position: absolute;
+        background-color: #6666667a;
+        color: rgb(255, 255, 255);
+        border: none;
+        border-radius: 14px;
+        padding: 8px 14px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        box-shadow: 0 4px 12px rgba(47, 47, 47, 0.47);
         transform: translate(-50%, -50%);
         white-space: nowrap;
         transition: background-color 0.3s ease;
@@ -64,46 +102,65 @@
         window.addEventListener("load", () => { openWebsocketCommunication()});
     </script>
   </head>
-  <body style="background-color: aquamarine;">
-    <button role="link" id="Go">Game</button>
+  <body style="background-color: rgb(230, 230, 230);">
+    <h4>
+      After the destruction of all objects on land by aliens, the action moved to the oceans, where all the bases are located.
+      The aliens are trying to destroy all the defenders of the bases in order to find them without obstacles and destroy them. 
+    </h4>
+    <h4>
+      They are opposed by earthlings on ultra-modern ships, they need to destroy all the attacking aliens.
+    </h4>
+    <h3>Choose your side:</h3>
+    <button role="link" id="Go" class = "Aliens">Aliens</button><button role="link" id="Go" class = "Earthlings">Earthlings</button>
     <script>
     let buttonGo = document.getElementById("Go");   
     buttonGo.addEventListener("click", async () => {
       window.location.replace(`${window.location.origin}/src/srv/client/game`);
     });
- </script>
+    </script>
+    <br><br>
     <div id="map" role="region"></div>
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <script>
       const oceans = [
         {
-          name: 'Pacific Ocean',
-          coordinates: [-140, 0],
+          name: '<<Scene of action - Pacific Ocean>>',
+          coordinates: [-130, -30],
+          active: true,
+          description: "After the destruction of all objects on land by aliens, the action moved to the oceans, where all the bases are located. The aliens are trying to destroy all the defenders of the bases in order to find them without obstacles and destroy them. They are opposed by earthlings on ultra-modern ships, they need to destroy all the attacking aliens.",
         },
         {
-          name: 'Atlantic Ocean',
+          name: '<Maybe later (Atlantic Ocean)>',
           coordinates: [-40, 20],
+          active: false,
+          description: "-----",
         },
         {
-          name: 'Indian Ocean',
+          name: '<Maybe later (Indian Ocean)>',
           coordinates: [75, -20],
+          active: false,
+          description: "-----",
         },
         {
-          name: 'Arctic Ocean',
+          name: '<Maybe later (Arctic Ocean)>',
           coordinates: [0, 80],
+          active: false,
+          description: "-----",
         },
         { 
-          name: 'Southern Ocean',
+          name: '<Maybe later (Southern Ocean)>',
           coordinates: [0, -65],
+          active: false,
+          description: "-----",
         },
       ];
       const map = new maplibregl.Map({
         container: 'map',
-        style: 'https://demotiles.maplibre.org/style.json',
-        center: [0, 20],
-        zoom: 2,
-        minZoom: 1,
-        maxZoom: 9,
+        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=SZN5rGmI0wbCh1NWygv3',
+        center: [-130, -30],
+        zoom: 2.7,
+        minZoom: 0.30,
+        maxZoom: 18,
       });
       map.addControl(new maplibregl.NavigationControl({showCompass:true, showZoom:true}), 'top-right');
       
@@ -111,7 +168,10 @@
         const mapContainer = document.getElementById('map');
             oceans.forEach(ocean => {
           const oceanButton = document.createElement('button');
-          oceanButton.className = 'ocean-button';
+          if (ocean.active)
+            oceanButton.className = 'ocean-button';
+          else
+            oceanButton.className = 'ocean-button-notactive';
           oceanButton.type = 'button';
           oceanButton.textContent = ocean.name;
           oceanButton.title = ocean.description;

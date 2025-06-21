@@ -38,7 +38,7 @@ export class Unit_Player {
         if (params.team == "Earth") {
             this.model = await res.loadG3DM("warshipEarthT.g3dm");
         } else {
-            this.model = await res.loadG3DM("warshiAliensT.g3dm");
+            this.model = await res.loadG3DM("warshipAliensT.g3dm");
         }
     }
     close() {
@@ -62,7 +62,7 @@ export class Unit_Player {
         if (this.model != undefined)
             this.model.draw(mth.MatrMulMatr(mth.MatrScale(mth.Vec3(0.5, 0.5, 0.5)), mth.MatrTranslate(this.pos)));
     }
-    update = () => {
+    update = (params) => {
         if (params.pos != undefined) {
             this.pos = params.pos;
         } else {

@@ -78,11 +78,13 @@ async function initServer() {
     //await Animation.animAddUnit("Skybox");
     addToUnitList("water", "water", 0);
     addToUnitList("test", "test", 0);
+    addToUnitList("skybox", "skybox", 0);
     /*
     await Animation.animAddUnit("water");
     await Animation.animAddUnit("test");
     */
     Animation.updateUnits(unitsList);
+
     initDatabase();
 }
 
