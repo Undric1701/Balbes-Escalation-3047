@@ -38,7 +38,7 @@ export async function openWebsocketCommunication() {
         */
         socket.on("Animation-Update", async function (unitsList) {
             if (animation == undefined) {
-                animation = new Anim.Animation();
+                animation = new Anim.Animation(socket);
                 await animation.finishInit();
                 clearInterval(animInitTimeInterval);
                 startAnimation();

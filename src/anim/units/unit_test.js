@@ -3,7 +3,8 @@ import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 
 export class Unit_Test {
-    constructor() {
+    constructor(name, params) {
+        this.name = name;
 
     };
     async init(name, params) {

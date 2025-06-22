@@ -17,12 +17,15 @@ const input = require("./input.js");
 //import * as unit from "./units/unit.js";
 
 export class Animation {
-  constructor(/* socket */) {
+  constructor(socket) {
     this.timer = new time.Timer();
     if (typeof window !== 'undefined') {
       this.render = new rnd.Render();
       this.input = new input.Input();
       this.cam = camera();
+      if (socket != undefined) {
+        this.socket = socket;
+      }
       window.onresize = () => { this.animResize(window.innerWidth, window.innerHeight) }
     }
     //this.socket = socket;
@@ -81,6 +84,7 @@ export class Animation {
       let uni = unitsList.find(unit => unit.name == this.units[i].name);
       if (uni == undefined) {
         await this.units[i].close();
+        this.units.splice(i, 1);
       }
     }
   }

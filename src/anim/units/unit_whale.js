@@ -8,7 +8,7 @@ export class Unit_Test {
     };
     async init(name, params) {
         this.name = name;
-        this.model = await res.loadG3DM("warshipAliensT.g3dm");
+        this.model = await res.loadG3DM("whale.g3dm");
     }
     close = () => {
         if (this.model != undefined) {
@@ -18,7 +18,6 @@ export class Unit_Test {
     response = () => {
     };
     render = () => {
-        //this.prim.draw(mth.MatrMulMatr(mth.MatrRotate(animation.timer.time, mth.Vec3(204, 130, 102)), mth.MatrTranslate(mth.Vec3(2, 2, 2))));
         if (this.model != undefined)
             this.model.draw(mth.MatrMulMatr(mth.MatrRotate(animation.timer.time, mth.Vec3(0, 1, 0)),
                 mth.MatrTranslate(mth.Vec3(Math.sin(animation.timer.time * mth.PI) * 10, -0.2, Math.cos(animation.timer.time * mth.PI) * 10))));

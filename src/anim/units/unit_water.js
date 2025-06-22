@@ -40,10 +40,9 @@ function gridCreate(w, h, size) {
 }
 
 export class Unit_Water {
-    /*
-    constructor() {
+    constructor(name, params) {
+        this.name = name;
     };
-    */
     async init(name, params) {
         this.name = name;
         this.mtl = res.material("Water material", mth.Vec4(0.3, 0.3, 0.3, 1), mth.Vec4(0.5, 0.5, 0.5, 1), mth.Vec4(0.2, 0.2, 0.2, 0.2));

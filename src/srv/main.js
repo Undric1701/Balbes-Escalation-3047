@@ -75,19 +75,12 @@ function addToUnitList(id, name, params) {
 }
 
 async function initServer() {
-    //await Animation.animAddUnit("Skybox");
     addToUnitList("water", "water", 0);
     addToUnitList("test", "test", 0);
     addToUnitList("skybox", "skybox", 0);
-    /*
-    await Animation.animAddUnit("water");
-    await Animation.animAddUnit("test");
-    */
     Animation.updateUnits(unitsList);
-
     initDatabase();
 }
-
 
 io.on("connection", (socket) => {
     players.push(socket);
@@ -139,24 +132,16 @@ io.on("connection", (socket) => {
         Animation.updateUnits(unitsList);
         io.emit("Animation-Update", unitsList);
     });
+    socket.on("Player-Send-Input", function (data) {
+        let user = Animation.units.find(unit => unit.id == data.id);
 
-    //socket.on("Animation-Update", function (unitsList) )
-    /*
-    socket.on("Animation-Init-Response", async function (client_anim) {
-        Animation = client_anim;
-        Animation = new Anim.Animation();
-        clearInterval(animInitTimeInterval);
-        await initServer();
-    });
-    if (Animation == undefined) {
-        animInitTimeInterval = setInterval(() => { socket.emit("No-Animation-On-Server") }, 1000);
-    } else {
-        Animation.animAddUnit("Player", socket);
-        for (let i = 0; i < players.length; i++)
-            socket.to(players[i].id).emit("Animation-From-Server", Animation);
-    }
-    /*              
-    */
+        if (user != undefined) {
+            //user.update(data);
+            unitsList.find(unit => unit.params.id == data.id).params = data;
+            Animation.updateUnits(unitsList);
+            io.emit("Animation-Update", unitsList);
+        }
+    })
 });
 
 app.get("/", (req, res) => {
@@ -195,18 +180,6 @@ app.get("/client.js", (req, res) => {
         io.emit("Start-Animation");
     });
 });
-
-/*
-app.get("/game/index.html", (req, res) => {
-    fs.readFile(__dirname + "./client/game/index.html", "utf8").then((contents) => {
-            console.log("Super success!!!!!!!");
-            res.send(contents);
-        })
-    .catch (err) {
-        res.setHeader()
-    }
-});
-*/
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
