@@ -64,7 +64,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 let players = [];
-export let Animation = new Anim.Animation();
+global.Animation = new Anim.Animation();
 let animResposneTimeInterval;
 let unitsList = [];
 
@@ -79,6 +79,9 @@ async function initServer() {
     addToUnitList("test", "test", 0);
     addToUnitList("skybox", "skybox", 0);
     Animation.updateUnits(unitsList);
+    /*if (window.animation == undefined) {
+        window.animation = Animation;
+    }*/
     initDatabase();
     setInterval(() => { Animation.animResponse() }, 30);
     //Animation.animResponse();
@@ -135,11 +138,11 @@ io.on("connection", (socket) => {
         io.emit("Animation-Update", unitsList);
     });
     socket.on("Player-Send-Input", function (data) {
-        let user = Animation.units.find(unit => unit.id == data.id);
-
+        let user = Animation.units.find(unit => unit.name == data.name);
         if (user != undefined) {
             //user.update(data);
-            unitsList.find(unit => unit.params.id == data.id).params = data;
+            unitsList = Animation.unitsList();
+            unitsList.find(unit => unit.name == data.name).params = data.params;
             Animation.updateUnits(unitsList);
             io.emit("Animation-Update", unitsList);
         }

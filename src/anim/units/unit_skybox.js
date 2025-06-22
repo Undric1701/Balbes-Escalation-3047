@@ -40,6 +40,9 @@ export class UnitSkybox {
     window.gl.depthMask(true);
   }
   update = () => { }
+  getData = () => {
+    return {iid: "skybox", name: this.name, params: 0};
+  }
 }
 
 export function unitCreate(name, params) {

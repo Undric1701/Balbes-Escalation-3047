@@ -2,11 +2,6 @@ import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 import * as input from "../input.js"
 
-let animation;
-if (typeof window !== "undefined") {
-    animation = await import("main").Animation;
-}
-
 export class Unit_Player {
     constructor(name, params) {
         this.name = name;
@@ -35,7 +30,7 @@ export class Unit_Player {
         } else {
             this.rotate = 0;
         }
-        this.speed = 2;
+        this.speed = 3.0;
         this.dir = mth.Vec3(1, 0, 0);
         this.lastRotate = 0;
         this.maxSpeed = 10;
@@ -63,7 +58,7 @@ export class Unit_Player {
             if (this.id == animation.id) {
                 let keys = animation.input.keys;
                 if (keys['a'.charCodeAt(0)] || keys['A'.charCodeAt(0)]) {
-                    isInput = true; // || keys["d"] || keys["D"]) {
+                    isInput = true;
                     if (this.velocity.x == 0 && this.velocity.y == 0 && this.velocity.z == 0) {
                         this.dir = mth.Vec3MulMatr(mth.Vec3(1, 0, 0), mth.MatrRotateY(this.lastRotate));
                     } else {
@@ -106,7 +101,7 @@ export class Unit_Player {
             }
         }
         this.rotate = -180 / mth.PI * Math.atan2(this.dir.z, this.dir.x);
-        if (animation != undefined) {
+        if (typeof window !== "undefined") {
             this.velocity = mth.Vec3AddVec3(this.velocity, mth.Vec3MulNum(this.acceleration, animation.timer.deltaTime));
             this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
             this.pos.y =
@@ -120,11 +115,11 @@ export class Unit_Player {
             }
         }
         else {
-            this.velocity = mth.Vec3AddVec3(this.velocity, mth.Vec3MulNum(this.acceleration, animation.timer.deltaTime));
-            this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
+            this.velocity = mth.Vec3AddVec3(this.velocity, mth.Vec3MulNum(this.acceleration, Animation.timer.deltaTime));
+            this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.velocity, Animation.timer.deltaTime));
             this.pos.y =
-                0.04 * Math.sin(this.pos.x - this.pos.z + animation.timer.time * 3.0) +
-                0.01 * Math.cos(-this.pos.x + this.pos.z + animation.timer.time * 4.7);
+                0.04 * Math.sin(this.pos.x - this.pos.z + Animation.timer.time * 3.0) +
+                0.01 * Math.cos(-this.pos.x + this.pos.z + Animation.timer.time * 4.7);
         }
     };
     render(ev) {
@@ -132,6 +127,9 @@ export class Unit_Player {
             this.model.draw(mth.MatrMulMatr(mth.MatrRotateY(this.rotate), mth.MatrTranslate(this.pos)));
     }
     update = (params) => {
+        if (params == undefined) {
+            return;
+        }
         if (params.pos != undefined) {
             this.pos = params.pos;
         } else {
@@ -160,7 +158,6 @@ export class Unit_Player {
     }
     sendData = () => {
         let data = {
-            name: this.name,
             id: this.id,
             pos: this.pos,
             velocity: this.velocity,
@@ -168,7 +165,18 @@ export class Unit_Player {
             rotate: this.rotate,
             dir: this.dir,
         };
-        animation.socket.emit("Player-Send-Input", data);
+        animation.socket.emit("Player-Send-Input", {id: "player", name: this.name, params: data});
+    }
+    getData = () => {
+        let data = {
+            id: this.id,
+            pos: this.pos,
+            velocity: this.velocity,
+            acceleration: this.acceleration,
+            rotate: this.rotate,
+            dir: this.dir,
+        };
+        return {name: this.name, id: "player", params: data}
     }
 }
 

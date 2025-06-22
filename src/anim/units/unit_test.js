@@ -25,10 +25,11 @@ export class Unit_Test {
                 mth.MatrTranslate(mth.Vec3(Math.sin(animation.timer.time * mth.PI) * 10, -0.2, Math.cos(animation.timer.time * mth.PI) * 10))));
     }
     update = () => { }
-    sendData = () => {
+    getData = () => {
         let data = {
             name: this.name,
-            id: this.id
+            id: "test",
+            params: 0,
         };
         return data;
     }
