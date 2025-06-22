@@ -64,9 +64,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 let players = [];
-let Animation = new Anim.Animation();
+export let Animation = new Anim.Animation();
+let animResposneTimeInterval;
 let unitsList = [];
-let animInitTimeInterval;
 
 initServer();
 
@@ -80,6 +80,8 @@ async function initServer() {
     addToUnitList("skybox", "skybox", 0);
     Animation.updateUnits(unitsList);
     initDatabase();
+    setInterval(() => { Animation.animResponse() }, 30);
+    //Animation.animResponse();
 }
 
 io.on("connection", (socket) => {
@@ -250,5 +252,3 @@ async function srvAddMessage(message, user, date) {
         console.error(err);
     }
 }
-
-//initServer();

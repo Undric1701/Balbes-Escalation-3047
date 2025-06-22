@@ -28,14 +28,6 @@ export async function openWebsocketCommunication() {
         socket.on("Send-Messages", (messages) => {
             drawChat(messages);
         });
-        /*
-        socket.on("No-Animation-On-Server", async function () {
-            //startAnimation();      
-            let an = new Anim.Animation();
-            await an.finishInit();
-            socket.emit("Animation-Init-Response", an)
-        });
-        */
         socket.on("Animation-Update", async function (unitsList) {
             if (animation == undefined) {
                 animation = new Anim.Animation(socket);
@@ -44,14 +36,7 @@ export async function openWebsocketCommunication() {
                 startAnimation();
             }
             await animation.updateUnits(unitsList);
-            //window.requestAnimationFrame(Animation.animResponse);
         });
-        /*
-        socket.on("Start-Animation", () => {
-            Animation = new Anim.Animation();
-            window.requestAnimationFrame(Animation.animRender());
-        }); 
-        */
     });
 
     socket.on("disconnect", () => {
@@ -66,23 +51,16 @@ export function requestAnimation() {
 }
 
 let animInitTimeInterval;
-
 setTimeout(() => { requestAnimation() }, 5000);
 
-//socket.emit("New-Animation-Request", socket);
-
 export async function startAnimation() {
-    //Animation = new Anim.Animation(socket);
-
     animation.id = socket.id;
 
-    //await Animation.finishInit();
     if (window.animation == undefined) {
         window.animation = animation;
     }
 
     socket.emit("messageToServer", "Started new animation");
-    //socket.emit("Animation-Started", socket.id, Animation);
     window.requestAnimationFrame(animation.animResponse);
 }
 

@@ -43,7 +43,9 @@ export class Animation {
   }
   animResponse = () => {
     this.timer.response();
-    this.input.response();
+    if (typeof window !== 'undefined') {
+      this.input.response();
+    }
 
     for (let unit of this.units) {
       unit.response();
