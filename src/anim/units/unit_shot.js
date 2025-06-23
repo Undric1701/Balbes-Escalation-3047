@@ -38,19 +38,15 @@ export class Unit_Shot {
         this.prim.free();
     }
     response = () => {
-        if (this.A) {
-            this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, this.speed));
-            if (mth.Vec3Len(mth.Vec3SubVec3(this.pos, this.start)) > 100.0) {
-                this.A = false;
-            }
+        this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, this.speed));
+        if (mth.Vec3Len(mth.Vec3SubVec3(this.pos, this.start)) > 100.0) {
+            this.A = false;
         }
     };
     render(ev) {
-        if (this.A) {
-            this.prim.draw(mth.MatrTranslate(this.pos));
-            this.BB = OBBMulMatr(this.BB, mth.MatrTranslate(this.pos));
-            this.OBBprim.draw(mth.MatrTranslate(this.BB.C));
-        }
+        this.prim.draw(mth.MatrTranslate(this.pos));
+        this.BB = OBBMulMatr(this.BB, mth.MatrTranslate(this.pos));
+        this.OBBprim.draw(mth.MatrTranslate(this.BB.C));
     }
     update = (params) => {
         if (params == undefined) {

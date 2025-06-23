@@ -72,7 +72,7 @@ export class Unit_Water {
         this.water.draw(mth.MatrTranslate(mth.Vec3(2 * (animation.cam.loc.x >> 1), 0, 2 * (animation.cam.loc.z >> 1))));
     }
     update = () => { }
-    getData = ()  => {
+    getData = () => {
         return {
             id: "water",
             name: this.name
@@ -80,6 +80,6 @@ export class Unit_Water {
     }
 }
 
-export function unitCreate() {
-    return new Unit_Water();
+export function unitCreate(name, params) {
+    return new Unit_Water(name, params);
 }

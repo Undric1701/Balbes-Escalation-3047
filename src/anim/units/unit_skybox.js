@@ -36,7 +36,7 @@ export class UnitSkybox {
 
   render() {
     window.gl.depthMask(false);
-    this.prim.draw(mth.MatrInverse(window.animation.cam.matrVP));
+    this.prim.draw();
     window.gl.depthMask(true);
   }
   update = () => { }
