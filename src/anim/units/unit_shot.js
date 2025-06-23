@@ -1,8 +1,9 @@
 import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 import * as input from "../input.js"
-import { OBB, OBBMulMatr } from "../../phys/phys.js";
+import { isCrossOBB, OBB, OBBMulMatr } from "../../phys/phys.js";
 import { cubePrim, dodePrim } from "../../mth/geometry/platon_bodies.js";
+import { Unit_Player } from "./unit_player.js";
 
 export class Unit_Shot {
     constructor(name, params) {
@@ -12,7 +13,6 @@ export class Unit_Shot {
         this.pos = mth.Vec3(params.pos);
         this.dir = mth.Vec3(params.dir);
         this.speed = 2;
-        this.A = true;
     };
     async init(name, params) {
         if (name != undefined) {
@@ -23,34 +23,43 @@ export class Unit_Shot {
             this.dir = mth.Vec3(params.dir);
             this.speed = 2;
             this.start = mth.Vec3(params.pos);
-            this.A = true;
         }
         if (this.team == "Earth") {
             this.prim = dodePrim(mth.Vec4(0, 0.5, 1, 1));
         } else {
             this.prim = dodePrim(mth.Vec4(1, 0.5, 0, 1));
         }
-        this.OBBprim = cubePrim(mth.Vec4(1, 1, 1, 1));
+        //this.OBBprim = cubePrim(mth.Vec4(1, 1, 1, 1));
         this.BB = OBB(1.6181, 2, 1.6181);
-        this.BB = OBBMulMatr(this.BB, mth.MatrRotateY(Math.atan2(this.dir.x, this.dir.z)));
+        //if (this.A)
+        this.BB = OBBMulMatr(this.BB, mth.MatrRotateY(Math.atan2(this.dir.z, this.dir.x)));
+        //this.BB = OBBMulMatr(this.BB, mth.MatrTranslate(this.start));   
     }
     close() {
-        this.prim.free();
+        //this.OBBprim.free();
     }
     response = () => {
-        if (this.A) {
-            this.pos = mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, this.speed));
-            if (mth.Vec3Len(mth.Vec3SubVec3(this.pos, this.start)) >  100.0) {
-                this.A = false;
+        this.pos = mth.Vec3AddVec3(this.pos, this.dir);//mth.Vec3MulNum(this.dir, this.speed));
+        let saveBB = OBB(this.BB);
+        this.BB = OBBMulMatr(this.BB, mth.MatrTranslate(this.pos));
+        if (mth.Vec3Len(mth.Vec3SubVec3(this.pos, this.start)) >  100.0) {
+            if (typeof window == "undefined")
+                animation.socket.emit("Delete-Shot", this.getData());
+        }
+        if (typeof window !== "undefined") {
+            let list = animation.unitsList();
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].id == 'player'/* instanceof Unit_Player */&& list[i].params.team != this.team) {
+                    if (isCrossOBB(this.BB, OBB(list[i].params.pos, 3, 2, 2, list[i].params.dir, mth.Vec3(0, 1, 0), mth.Vec3CrossVec3(mth.Vec3(0, 1, 0), list[i].params.dir)))) {
+                        console.log(`!${list[i].name}!${this.name}!`);
+                    }
+                }
             }
         }
+        this.BB = OBB(saveBB);
     };
     render(ev) {
-        if(this.A) {
-            this.prim.draw(mth.MatrTranslate(this.pos));
-            this.BB = OBBMulMatr(this.BB, mth.MatrTranslate(this.pos));
-            this.OBBprim.draw(mth.MatrTranslate(this.BB.C));
-        }
+        this.prim.draw(mth.MatrTranslate(mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.52, 0))));
     }
     update = (params) => {
         if (params == undefined) {

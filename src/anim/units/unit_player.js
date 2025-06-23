@@ -1,6 +1,7 @@
 import * as res from "../rnd/res/res.js"
 import *  as mth from "../../mth/mth.js"
 import * as input from "../input.js"
+import { OBB } from "../../phys/phys.js";
 
 export class Unit_Player {
     constructor(name, params) {
@@ -62,6 +63,8 @@ export class Unit_Player {
         } else {
             this.model = await res.loadG3DM("warshipAliensT.g3dm");
         }
+
+        //this.BB = OBB(this.model.prims[0].minBB);
     }
     close() {
         if (this.model != undefined) {
@@ -73,17 +76,6 @@ export class Unit_Player {
         if (typeof window !== "undefined") {
             if (this.id == animation.id) {
                 let keys = animation.input.keys;
-                let keysClick = animation.input.keysClick;
-                if (keysClick[' '.charCodeAt(0)]) {
-                    let shotName = "shot#" + this.id + "_" + Date.now();
-                    let shot = animation.animAddUnit("shot", shotName, {
-                        id: this.id,
-                        team: this.team,
-                        pos: mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, 2)),
-                        dir: this.dir,
-                    });
-                    animation.socket.emit("Player-Change-Scene", animation.unitsList());
-                }
                 if (keys['a'.charCodeAt(0)] || keys['A'.charCodeAt(0)]) {
                     isInput = true;
                     if (this.velocity.x == 0 && this.velocity.y == 0 && this.velocity.z == 0) {
@@ -125,9 +117,6 @@ export class Unit_Player {
                         this.lastInputTime = animation.timer.time;
                     }
                 }
-                let loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
-                loc.y = animation.cam.loc.y;
-                animation.cam.set(loc, mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.8, 0)), mth.Vec3(0, 1, 0));
             }
         }
         this.rotate = -180 / mth.PI * Math.atan2(this.dir.z, this.dir.x);
@@ -137,6 +126,26 @@ export class Unit_Player {
             this.pos.y =
                 0.04 * Math.sin(this.pos.x - this.pos.z + animation.timer.time * 3.0) +
                 0.01 * Math.cos(-this.pos.x + this.pos.z + animation.timer.time * 4.7);
+            if (this.id == animation.id) {
+                let loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
+                loc.y = animation.cam.loc.y;
+                animation.cam.set(loc, mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.8, 0)), mth.Vec3(0, 1, 0));
+            }
+
+            let keysClick = animation.input.keysClick;
+            if (keysClick['e'.charCodeAt(0)] && this.id == animation.id) {
+                    let shotName = "shot#" + this.id + "_" + Date.now();
+                    let shot = animation.animAddUnit("shot", shotName, {
+                        id: this.id,
+                        team: this.team,
+                        pos: this.pos,//mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, 2)),
+                        dir: this.dir,
+                    });
+                    this.lastInputTime = animation.timer.time;
+                    isInput = false;
+                    animation.socket.emit("Player-Change-Scene", animation.unitsList());
+            }
+                    
             if (isInput) {
                 if (animation.timer.time - this.lastInputTime > this.inputDelay) {
                     this.sendData();

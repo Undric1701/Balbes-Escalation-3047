@@ -114,8 +114,8 @@ io.on("connection", (socket) => {
             players.splice(index, 1);
         }
     });
-    socket.on("Delete-Shot", function (name, id, data) {
-        let ind = unitsList.indexOf(unitsList.find(unit => unit.name == name));
+    socket.on("Delete-Shot", function (data) {
+        let ind = unitsList.indexOf(unitsList.find(unit => unit.name == data.name));
         if (ind > -1) {
             unitsList.splice(ind, 1);
         Animation.updateUnits(unitsList);

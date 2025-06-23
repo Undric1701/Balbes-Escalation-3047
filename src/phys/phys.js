@@ -1,26 +1,34 @@
 /* IK4, 14.06.2025, physic module */
 /* IK4, 19.06.2025, physic module */
 
-import { Vec3MulMatr, Vec3, Vec3Normalize, Vec3DotVec3, Vec3SubVec3, Vec3CrossVec3, Vec3AddVec3, Vec3MulNum, Vec3Neg } from "../mth/mth_vec3.js";
+import { Vec3MulMatr, Vec3, Vec3Normalize, Vec3DotVec3, Vec3SubVec3, Vec3CrossVec3, Vec3AddVec3, Vec3MulNum, Vec3Neg, _Vec3 } from "../mth/mth_vec3.js";
 
 export class _BoundBox {
-    constructor(C, hU, hV, hW, U, W, V) {
-        if (typeof C == "number") {
+    constructor(Center, hU, hV, hW, U, W, V) {
+        if (typeof Center == "number") {
             this.C = Vec3(0);
-            this.hU = C;
+            this.hU = Center;
             this.hV = hU;
             this.hW = hV;
             this.U = Vec3Normalize(Vec3(this.C.x + this.hU, this.C.y, this.C.z));
             this.W = Vec3Normalize(Vec3(this.C.x, this.C.y + this.hW, this.C.z));
             this.V = Vec3Normalize(Vec3(this.C.x, this.C.y, this.C.z + this.hV));
-        } else {
-            this.C = Vec3(C);
+        } else if (Center instanceof _Vec3) {
+            this.C = Vec3(Center);
             this.hU = hU;
             this.hV = hV;
             this.hW = hW;
             this.U = Vec3(U);
             this.V = Vec3(V);
             this.W = Vec3(W);
+        } else {
+            this.C = Vec3(Center.C);
+            this.hU = Center.hU;
+            this.hV = Center.hV;
+            this.hW = Center.hW;
+            this.U = Vec3(Center.U);
+            this.V = Vec3(Center.V);
+            this.W = Vec3(Center.W);
         }
     }
 }
