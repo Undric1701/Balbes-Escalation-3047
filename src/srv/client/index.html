@@ -98,8 +98,8 @@
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module">
-        import {openWebsocketCommunication} from "./client.js"
-        window.addEventListener("load", () => { openWebsocketCommunication()});
+        //import {openWebsocketCommunication} from "./client.js"
+        //window.addEventListener("load", () => { openWebsocketCommunication()});
     </script>
   </head>
   <body style="background-color: rgb(230, 230, 230);">
@@ -111,14 +111,16 @@
       They are opposed by earthlings on ultra-modern ships, they need to destroy all the attacking aliens.
     </h4>
     <h3>Choose your side:</h3>
-    <button role="link" id="Aliens" class = "Aliens">Aliens</button><button role="link" id="Earthlings" class = "Earthlings">Earthlings</button>
+    <button role="link" id="GoAlien" class = "Aliens">Aliens</button><button role="link" id="GoEarth" class = "Earthlings">Earthlings</button>
     <script>
-    let buttonE = document.getElementById("Earthlings");   
-    buttonE.addEventListener("click", async () => {
+    let buttonGoA = document.getElementById("GoAlien");   
+    buttonGoA.addEventListener("click", async () => {
+      localStorage.setItem("team", "Aliens");
       window.location.replace(`${window.location.origin}/src/srv/client/game`);
-    });
-    let buttonA = document.getElementById("Aliens");   
-    buttonA.addEventListener("click", async () => {
+    });    
+    let buttonGoE = document.getElementById("GoEarth");   
+    buttonGoE.addEventListener("click", async () => {
+      localStorage.setItem("team", "Earth");
       window.location.replace(`${window.location.origin}/src/srv/client/game`);
     });
     </script>

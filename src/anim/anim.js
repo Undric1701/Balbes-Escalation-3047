@@ -73,7 +73,7 @@ export class Animation {
     }
   }
   async updateUnits(unitsList) {
-    for (let i =  0; i < unitsList.length; i++) {
+    for (let i = 0; i < unitsList.length; i++) {
       let uni = this.units.find(unit => unit.name == unitsList[i].name);
       if (uni == undefined) {
         await this.animAddUnit(unitsList[i].id, unitsList[i].name, unitsList[i].params);
@@ -82,7 +82,7 @@ export class Animation {
       }
     }
 
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.units.length; i++) {
       let uni = unitsList.find(unit => unit.name == this.units[i].name);
       if (uni == undefined) {
         await this.units[i].close();

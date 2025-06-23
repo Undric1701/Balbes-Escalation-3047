@@ -108,6 +108,9 @@ io.on("connection", (socket) => {
         console.log(`Client disconnected with id: ${socket.id}`);
         const index = players.indexOf(socket);
         if (index > -1) {
+            unitsList.splice(unitsList.indexOf(unitsList.find(unit => unit.name == `player#${socket.id}`)), 1);
+            Animation.updateUnits(unitsList);
+            io.emit("Animation-Update", unitsList);
             players.splice(index, 1);
             ///!!!!!!!!!!!!!!!11 add player unit clear
         }
@@ -123,7 +126,7 @@ io.on("connection", (socket) => {
         console.log(`Client:${id} started new animation`);
     });
 
-    socket.on("New-Animation-Request", function () {
+    socket.on("New-Animation-Request", function (team) {
         addToUnitList(
             "player",
             `player#${socket.id}`,
@@ -132,7 +135,7 @@ io.on("connection", (socket) => {
                 pos: mth.Vec3(Math.random() * 30, -0.1, Math.random() * 30),
                 velocity: mth.Vec3(0),
                 acceleration: mth.Vec3(0, 0, 0),
-                team: Math.random() > 0.5 ? "Earth" : "Aliens"
+                team: team,
             });
         Animation.updateUnits(unitsList);
         io.emit("Animation-Update", unitsList);
