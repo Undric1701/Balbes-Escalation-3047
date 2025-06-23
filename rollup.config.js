@@ -16,6 +16,5 @@ module.exports = {
             browser: true
         }),
         commonjs(),
-        // terser()
     ]
 };

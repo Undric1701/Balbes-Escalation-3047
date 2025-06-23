@@ -64,9 +64,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 let players = [];
-let Animation = new Anim.Animation();
+global.Animation = new Anim.Animation();
+let animResposneTimeInterval;
 let unitsList = [];
-let animInitTimeInterval;
 
 initServer();
 
@@ -75,19 +75,17 @@ function addToUnitList(id, name, params) {
 }
 
 async function initServer() {
-    //await Animation.animAddUnit("Skybox");
     addToUnitList("water", "water", 0);
     addToUnitList("test", "test", 0);
     addToUnitList("skybox", "skybox", 0);
-    /*
-    await Animation.animAddUnit("water");
-    await Animation.animAddUnit("test");
-    */
     Animation.updateUnits(unitsList);
-
+    /*if (window.animation == undefined) {
+        window.animation = Animation;
+    }*/
     initDatabase();
+    setInterval(() => { Animation.animResponse() }, 30);
+    //Animation.animResponse();
 }
-
 
 io.on("connection", (socket) => {
     players.push(socket);
@@ -139,24 +137,16 @@ io.on("connection", (socket) => {
         Animation.updateUnits(unitsList);
         io.emit("Animation-Update", unitsList);
     });
-
-    //socket.on("Animation-Update", function (unitsList) )
-    /*
-    socket.on("Animation-Init-Response", async function (client_anim) {
-        Animation = client_anim;
-        Animation = new Anim.Animation();
-        clearInterval(animInitTimeInterval);
-        await initServer();
-    });
-    if (Animation == undefined) {
-        animInitTimeInterval = setInterval(() => { socket.emit("No-Animation-On-Server") }, 1000);
-    } else {
-        Animation.animAddUnit("Player", socket);
-        for (let i = 0; i < players.length; i++)
-            socket.to(players[i].id).emit("Animation-From-Server", Animation);
-    }
-    /*              
-    */
+    socket.on("Player-Send-Input", function (data) {
+        let user = Animation.units.find(unit => unit.name == data.name);
+        if (user != undefined) {
+            //user.update(data);
+            unitsList = Animation.unitsList();
+            unitsList.find(unit => unit.name == data.name).params = data.params;
+            Animation.updateUnits(unitsList);
+            io.emit("Animation-Update", unitsList);
+        }
+    })
 });
 
 app.get("/", (req, res) => {
@@ -195,18 +185,6 @@ app.get("/client.js", (req, res) => {
         io.emit("Start-Animation");
     });
 });
-
-/*
-app.get("/game/index.html", (req, res) => {
-    fs.readFile(__dirname + "./client/game/index.html", "utf8").then((contents) => {
-            console.log("Super success!!!!!!!");
-            res.send(contents);
-        })
-    .catch (err) {
-        res.setHeader()
-    }
-});
-*/
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
@@ -277,5 +255,3 @@ async function srvAddMessage(message, user, date) {
         console.error(err);
     }
 }
-
-//initServer();
