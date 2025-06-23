@@ -30,6 +30,16 @@ export class Unit_Player {
         } else {
             this.rotate = 0;
         }
+        if (params.hp != undefined) {
+            this.hp = params.hp;
+        } else {
+            this.hp = 100;
+        }
+        if (params.team != undefined) {
+            this.hp = params.team;
+        } else {
+            this.team = "Earth";
+        }
         this.speed = 3.0;
         this.dir = mth.Vec3(1, 0, 0);
         this.lastRotate = 0;
@@ -43,7 +53,11 @@ export class Unit_Player {
     };
     async init(name, params) {
         this.name = name;
-        if (params.team == "Earth") {
+
+        if (this.team == undefined) {
+            this.team = params.team;
+        }
+        if (this.team == "Earth") {
             this.model = await res.loadG3DM("warshipEarthT.g3dm");
         } else {
             this.model = await res.loadG3DM("warshipAliensT.g3dm");
@@ -155,28 +169,35 @@ export class Unit_Player {
         } else {
             this.dir = mth.Vec3(1, 0, 0);
         }
+        if (params.team != undefined) {
+            this.team = params.team;
+        } else {
+            this.team = "Earth";
+        }
     }
     sendData = () => {
         let data = {
             id: this.id,
+            team: this.team,
             pos: this.pos,
             velocity: this.velocity,
             acceleration: this.acceleration,
             rotate: this.rotate,
             dir: this.dir,
         };
-        animation.socket.emit("Player-Send-Input", {id: "player", name: this.name, params: data});
+        animation.socket.emit("Player-Send-Input", { id: "player", name: this.name, params: data });
     }
     getData = () => {
         let data = {
             id: this.id,
             pos: this.pos,
+            team: this.team,
             velocity: this.velocity,
             acceleration: this.acceleration,
             rotate: this.rotate,
             dir: this.dir,
         };
-        return {name: this.name, id: "player", params: data}
+        return { name: this.name, id: "player", params: data }
     }
 }
 

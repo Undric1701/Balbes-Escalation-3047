@@ -41,7 +41,7 @@ export class UnitSkybox {
   }
   update = () => { }
   getData = () => {
-    return {iid: "skybox", name: this.name, params: 0};
+    return { id: "skybox", name: this.name, params: 0 };
   }
 }
 

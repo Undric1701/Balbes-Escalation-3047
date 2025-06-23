@@ -46,7 +46,11 @@ export async function openWebsocketCommunication() {
 
 export function requestAnimation() {
     if (socket != undefined) {
-        socket.emit("New-Animation-Request");
+        let team = localStorage.getItem("team");
+        if (team == undefined) {
+            team = "Earth"
+        }
+        socket.emit("New-Animation-Request", team);
     }
 }
 
