@@ -18,9 +18,15 @@ export class Input {
         this.My = 0;
         this.Mdx = 0;
         this.Mdy = 0;
+        this.Mz = 0;
+        this.Mdz = 0;
         let canvas = document.getElementById("webgl-canvas");
-        canvas.onmousedown = (ev) => { animation.input.mousePressed = true; }
-        canvas.onmouseup = (ev) => { animation.input.mousePressed = false; animation.input.Mdx = animation.input.Mdy = 0;}
+        canvas.onmousedown = (ev) => { animation.input.mousePressed = true; };
+        canvas.onmouseup = (ev) => { animation.input.mousePressed = false; animation.input.Mdx = animation.input.Mdy = 0;};
+        canvas.onwheel = (e) => {
+            animation.input.Mdz = e.deltaY;
+            animation.input.Mz += animation.input.Mdz;
+        };
         canvas.onmousemove = (ev) => {
             if (animation.input.saveX == -1 || animation.input.saveY == -1) {
                 animation.input.saveX = ev.x;

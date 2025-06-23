@@ -26,25 +26,25 @@ export class _Vertex {
         if (pos != undefined) {
             this.pos = pos;
         } else {
-            this.pos = mth.Vec3(0, 0, 0);
+            this.pos = Vec3(0, 0, 0);
         }
         //this.pos = pos;
         if (texCoord != undefined) {
             this.texCoord = texCoord;
         } else {
-            this.texCoord = mth.Vec2(0, 0);
+            this.texCoord = Vec2(0, 0);
         }
         //this.texCoord = texCoord;
         if (color != undefined) {
             this.color = color;
         } else {
-            this.color = mth.Vec4(1, 1, 1, 1);
+            this.color = Vec4(1, 1, 1, 1);
         }
         //this.color = color;
         if (normal != undefined) {
             this.normal = normal;
         } else {
-            this.normal = mth.Vec3(0, 1, 0);
+            this.normal = Vec3(0, 1, 0);
         }
         //this.normal = normal;        
     }

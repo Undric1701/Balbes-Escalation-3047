@@ -101,6 +101,10 @@ export class Unit_Player {
         this.pos.y =
             0.1 * Math.sin(this.pos.x * 3.0 - this.pos.z * 3.0 + animation.timer.time * 3.0) +
             0.03 * Math.cos(-this.pos.x * 5.2 + this.pos.z * 5.2 + animation.timer.time * 4.7);
+
+        let loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
+        loc.y = animation.cam.loc.y;
+        animation.cam.set(loc, mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.8, 0)), mth.Vec3(0, 1, 0));
     };
     render(ev) {
         if (this.model != undefined)

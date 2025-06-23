@@ -111,10 +111,14 @@
       They are opposed by earthlings on ultra-modern ships, they need to destroy all the attacking aliens.
     </h4>
     <h3>Choose your side:</h3>
-    <button role="link" id="Go" class = "Aliens">Aliens</button><button role="link" id="Go" class = "Earthlings">Earthlings</button>
+    <button role="link" id="Aliens" class = "Aliens">Aliens</button><button role="link" id="Earthlings" class = "Earthlings">Earthlings</button>
     <script>
-    let buttonGo = document.getElementById("Go");   
-    buttonGo.addEventListener("click", async () => {
+    let buttonE = document.getElementById("Earthlings");   
+    buttonE.addEventListener("click", async () => {
+      window.location.replace(`${window.location.origin}/src/srv/client/game`);
+    });
+    let buttonA = document.getElementById("Aliens");   
+    buttonA.addEventListener("click", async () => {
       window.location.replace(`${window.location.origin}/src/srv/client/game`);
     });
     </script>
@@ -181,7 +185,7 @@
           oceanButton.addEventListener('click', () => {
             map.flyTo({
               center: [ocean.coordinates[0], ocean.coordinates[1]],
-              zoom: 4,
+              zoom: 3.47,
               speed: 1.8,
               curve: 1.8,
             });

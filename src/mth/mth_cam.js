@@ -95,11 +95,19 @@ export function camera() {
   return new _camera();
 }
 
+/*
+export function control(keys, isShift) {
+  ;
+}
+*/
+
 let isA = false;
+let saveDist;
 
 export function control(keys, isShift) {
+  
   let Dist = mth.Vec3Len(mth.Vec3SubVec3(animation.cam.at, animation.cam.loc));
-
+  saveDist = Dist;
   let cosT = (animation.cam.loc.y - animation.cam.at.y) / Dist,
     sinT = Math.sqrt(1 - cosT * cosT),
     plen = Dist * sinT,
@@ -109,7 +117,8 @@ export function control(keys, isShift) {
     Elevator = mth.radian2Degrees(Math.atan2(sinT, cosT)),
     koef = 0.18, shift = 1;
 
-  Dist = 0.30;
+  /*
+  Dist = 20;
 
   let w = keys['w'.charCodeAt(0)] || keys['W'.charCodeAt(0)];
   let s = keys['s'.charCodeAt(0)] || keys['S'.charCodeAt(0)];
@@ -138,22 +147,14 @@ export function control(keys, isShift) {
       Dir = mth.Vec3AddVec3(Dir, mth.Vec3Neg(animation.cam.up));
     if (e)
       Dir = mth.Vec3AddVec3(Dir, animation.cam.up);
-
-    /*
-    if (w && s)
-      Dir = Vec3(0, 0, 0);
-    if (a && d)
-      Dir = Vec3(0, 0, 0);
-    if (e && q)
-      Dir = Vec3(0, 0, 0);
-    */
-
+    
     animation.cam.loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(Dir, koef * shift)), animation.cam.at = mth.Vec3AddVec3(animation.cam.at, mth.Vec3MulNum(Dir, koef * shift));
     animation.cam.set(animation.cam.loc, animation.cam.at, animation.cam.up);
 
   } else if (animation.input.mousePressed) {
     
-    if (animation.input.mousePressed)
+    */
+   if (animation.input.mousePressed)
       Azimuth -= animation.input.Mdx / 3.0;
 
     if (animation.input.mousePressed)
@@ -164,6 +165,11 @@ export function control(keys, isShift) {
     else if (Elevator > 178.90)
       Elevator = 178.90;
 
+    Dist += animation.input.Mdz / 180;
+    if (Dist < 0.1)
+      Dist = 0.1;
+    animation.input.Mdz = 0;
+
     window.animation.cam.set(mth.PointTransform(Vec3(0, Dist, 0), mth.MatrMulMatr3(mth.MatrRotateX(Elevator), mth.MatrRotateY(Azimuth), mth.MatrTranslate(animation.cam.at))),
       animation.cam.at,
       Vec3(0, 1, 0));
@@ -172,7 +178,8 @@ export function control(keys, isShift) {
       animation.cam.set(animation.cam.loc, animation.cam.at, animation.cam.up);
       isA = true;
     }
-  }
+    Dist = saveDist;
+  //}
 }
 
 /*
@@ -239,4 +246,4 @@ export function control(event) {
     }
   }
 }
-*/
+  */
