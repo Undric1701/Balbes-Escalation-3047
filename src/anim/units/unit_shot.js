@@ -4,8 +4,8 @@ import * as input from "../input.js"
 import { OBB, OBBMulMatr } from "../../phys/phys.js";
 
 export class Unit_Shot {
-    constructor(id, team, loc, dir) {
-        this.id = id;
+    constructor(name, team, loc, dir) {
+        this.name = name;
         this.team = team;
         this.loc = mth.Vec3(loc);
         this.dir = mth.Vec3(dir);

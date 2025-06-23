@@ -40,10 +40,10 @@ export class Unit_Player {
         } else {
             this.team = "Earth";
         }
-        this.speed = 3.0;
+        this.speed = 2.0;
         this.dir = mth.Vec3(1, 0, 0);
         this.lastRotate = 0;
-        this.maxSpeed = 10;
+        this.maxSpeed = 8;
         if (typeof window !== "undefined") {
             this.lastInputTime = animation.timer.time;
             this.inputDelay = 0.03;
@@ -115,6 +115,9 @@ export class Unit_Player {
                 let loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
                 loc.y = animation.cam.loc.y;
                 animation.cam.set(loc, mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.8, 0)), mth.Vec3(0, 1, 0));
+                if (keys[' '.charCodeAt(0)]) {
+                    let missileData = { name: `Player` };
+                }
             }
         }
         this.rotate = -180 / mth.PI * Math.atan2(this.dir.z, this.dir.x);
