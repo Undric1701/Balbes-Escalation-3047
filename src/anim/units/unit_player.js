@@ -112,6 +112,9 @@ export class Unit_Player {
                         this.lastInputTime = animation.timer.time;
                     }
                 }
+                let loc = mth.Vec3AddVec3(animation.cam.loc, mth.Vec3MulNum(this.velocity, animation.timer.deltaTime));
+                loc.y = animation.cam.loc.y;
+                animation.cam.set(loc, mth.Vec3AddVec3(this.pos, mth.Vec3(0, 1.8, 0)), mth.Vec3(0, 1, 0));
             }
         }
         this.rotate = -180 / mth.PI * Math.atan2(this.dir.z, this.dir.x);

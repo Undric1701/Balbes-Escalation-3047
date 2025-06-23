@@ -168,6 +168,8 @@ export function control(keys, isShift) {
     Dist += animation.input.Mdz / 180;
     if (Dist < 0.1)
       Dist = 0.1;
+    if (Dist > 30)
+      Dist = 30;
     animation.input.Mdz = 0;
 
     window.animation.cam.set(mth.PointTransform(Vec3(0, Dist, 0), mth.MatrMulMatr3(mth.MatrRotateX(Elevator), mth.MatrRotateY(Azimuth), mth.MatrTranslate(animation.cam.at))),
