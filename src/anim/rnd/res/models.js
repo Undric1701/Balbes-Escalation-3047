@@ -40,7 +40,7 @@ class _model {
         for (let i = 0; i < this.numOfPrims; i++)
             this.prims[i].prim.draw(mth.MatrMulMatr(this.prims[i].trans, m));
     }
-    free = () => { };
+    free = () => {};
 }
 
 export function model() {

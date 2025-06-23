@@ -112,9 +112,16 @@ io.on("connection", (socket) => {
             Animation.updateUnits(unitsList);
             io.emit("Animation-Update", unitsList);
             players.splice(index, 1);
-            ///!!!!!!!!!!!!!!!11 add player unit clear
         }
     });
+    socket.on("Delete-Shot", function (name, id, data) {
+        let ind = unitsList.indexOf(unitsList.find(unit => unit.name == name));
+        if (ind > -1) {
+            unitsList.splice(ind, 1);
+        Animation.updateUnits(unitsList);
+        io.emit("Animation-Update", unitsList);
+        }
+    })
     socket.on("Messages-Request", async function () {
         await srvGetMessages();
     });
@@ -146,6 +153,13 @@ io.on("connection", (socket) => {
             //user.update(data);
             unitsList = Animation.unitsList();
             unitsList.find(unit => unit.name == data.name).params = data.params;
+            Animation.updateUnits(unitsList);
+            io.emit("Animation-Update", unitsList);
+        }
+    });
+    socket.on("Player-Change-Scene", function (data) { 
+        if (data != undefined) {
+            unitsList = data;
             Animation.updateUnits(unitsList);
             io.emit("Animation-Update", unitsList);
         }
