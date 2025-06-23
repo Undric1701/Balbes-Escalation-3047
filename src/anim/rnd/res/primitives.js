@@ -76,6 +76,10 @@ export class _prim {
         }
     }
     free = () => {
+        if (typeof window === 'undefined' || !window.gl) {
+            return;
+        }
+        let gl = window.gl;
         gl.bindVertexArray(this.VA);
         /* Disconnect buffer */
         //gl.bindBuffer(gl.ARRAY_BUFFER, 0);

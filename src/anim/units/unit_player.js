@@ -64,13 +64,26 @@ export class Unit_Player {
         }
     }
     close() {
-        this.model.free();
+        if (this.model != undefined) {
+            this.model.free();
+        }
     }
     response = () => {
         let isInput = false;
         if (typeof window !== "undefined") {
             if (this.id == animation.id) {
                 let keys = animation.input.keys;
+                let keysClick = animation.input.keysClick;
+                if (keysClick[' '.charCodeAt(0)]) {
+                    let shotName = "shot#" + this.id + "_" + Date.now();
+                    let shot = animation.animAddUnit("shot", shotName, {
+                        id: this.id,
+                        team: this.team,
+                        pos: mth.Vec3AddVec3(this.pos, mth.Vec3MulNum(this.dir, 2)),
+                        dir: this.dir,
+                    });
+                    animation.socket.emit("Player-Change-Scene", animation.unitsList());
+                }
                 if (keys['a'.charCodeAt(0)] || keys['A'.charCodeAt(0)]) {
                     isInput = true;
                     if (this.velocity.x == 0 && this.velocity.y == 0 && this.velocity.z == 0) {
