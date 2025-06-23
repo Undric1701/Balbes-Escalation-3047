@@ -41,10 +41,10 @@ export class Unit_Player {
         } else {
             this.team = "Earth";
         }
-        this.speed = 3.0;
+        this.speed = 2.0;
         this.dir = mth.Vec3(1, 0, 0);
         this.lastRotate = 0;
-        this.maxSpeed = 10;
+        this.maxSpeed = 8;
         if (typeof window !== "undefined") {
             this.lastInputTime = animation.timer.time;
             this.inputDelay = 0.03;
